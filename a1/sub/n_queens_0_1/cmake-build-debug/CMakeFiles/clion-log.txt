@@ -1,0 +1,4 @@
+/usr/local/clion-2016.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/kim/workspace/gecode/constraint_programming_gecode/a1/sub/n_queens_0_1
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/kim/workspace/gecode/constraint_programming_gecode/a1/sub/n_queens_0_1/cmake-build-debug

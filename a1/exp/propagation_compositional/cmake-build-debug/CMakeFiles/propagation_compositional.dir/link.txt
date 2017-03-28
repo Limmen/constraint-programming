@@ -1,0 +1,1 @@
+/usr/bin/c++   -g   CMakeFiles/propagation_compositional.dir/src/main.cpp.o  -o propagation_compositional 

@@ -1,0 +1,1 @@
+/usr/bin/c++   -g   CMakeFiles/send_more_money_gist_2.dir/src/main.cpp.o  -o send_more_money_gist_2 

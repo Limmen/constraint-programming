@@ -1,0 +1,57 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage[english]{babel} 
+\usepackage{natbib}
+\usepackage{cite}
+\usepackage[parfill]{parskip}
+\usepackage{enumerate}
+\usepackage{float}%for image positions
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  citecolor=black,
+  filecolor=black,
+  linkcolor=black,
+  urlcolor=black
+}
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{invariant}[theorem]{Invariant}
+\newtheorem{breakpoint}[theorem]{Breakpoint}
+\newtheorem{problem}{Problem}
+\newtheorem{definition}{Definition} 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{pifont}
+\usepackage{multirow,array}
+\usepackage{centernot}
+\usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
+\usepackage{lipsum} %This package just generates Lorem Ipsum filler text. 
+\usepackage{fullpage} % changes the margin
+
+\begin{document}
+\section{Search Heuristics}
+Can you find a better heuristic than first-fail?
+
+Comparison between first-fail min-value (ffminv), first-fail max-value (ffmaxv), first-fail split-max(ffsmax), first-fail split-min (ffsmin).
+\begin{center}
+  \begin{tabular}{ | l | l | l | p{7cm} |}
+    \hline
+    \textbf{Search Heuristic} & \textbf{nodes} & \textbf{failures} \\ \hline
+    ffminv & 178 & 87 \\\hline
+    ffmaxv & 50 & 23 \\\hline
+    ffsmax & 50 & 23 \\\hline
+    ffsminv & 180 & 87 \\\hline
+  \end{tabular}
+\end{center}
+First-fail max-value and First-fail split-max are the best heuristics I've found. The main difference is that when picking max-value instead of min the failed sub-trees is a lot smaller. I.e trying the larger values first give more constraints and more propagation possible.
+\end{document}

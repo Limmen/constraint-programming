@@ -1,0 +1,3 @@
+/home/kim/workspace/gecode/constraint_programming_gecode/a1/exp/n_queens/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/kim/workspace/gecode/constraint_programming_gecode/a1/exp/n_queens/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/kim/workspace/gecode/constraint_programming_gecode/a1/exp/n_queens/cmake-build-debug/CMakeFiles/n_queens.dir
