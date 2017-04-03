@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
   "CMakeFiles/n_queens_0_1.dir/src/queens.cpp.o"
-  "CMakeFiles/n_queens_0_1.dir/src/test.cpp.o"
   "n_queens_0_1.pdb"
   "n_queens_0_1"
 )

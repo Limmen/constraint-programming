@@ -89,9 +89,6 @@
 		<Unit filename="/home/kim/workspace/gecode/constraint_programming_gecode/a1/sub/n_queens_0_1/src/queens.cpp">
 			<Option target="n_queens_0_1"/>
 		</Unit>
-		<Unit filename="/home/kim/workspace/gecode/constraint_programming_gecode/a1/sub/n_queens_0_1/src/test.cpp">
-			<Option target="n_queens_0_1"/>
-		</Unit>
 		<Unit filename="/home/kim/workspace/gecode/constraint_programming_gecode/a1/sub/n_queens_0_1/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

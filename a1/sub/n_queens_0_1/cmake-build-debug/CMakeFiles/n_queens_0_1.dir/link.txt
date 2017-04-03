@@ -1,1 +1,1 @@
-/usr/bin/c++   -g   CMakeFiles/n_queens_0_1.dir/src/queens.cpp.o CMakeFiles/n_queens_0_1.dir/src/test.cpp.o  -o n_queens_0_1 
+/usr/bin/c++   -g   CMakeFiles/n_queens_0_1.dir/src/queens.cpp.o  -o n_queens_0_1 

@@ -269,27 +269,26 @@ public:
             ScriptBase(opt),
             sudokuPositions(*this, 9 * 9, 1, 9) {
 
-        //Add constraints for the non-empty positions.
-        for (int i = 0; i < sudokuPositions.size(); i++) {
-            std::div_t d = std::div(i, 9);
-            int row = d.quot;
-            int column = d.rem;
-            int val = examples[opt.sudoku()][row][column];
-            if (val != 0) //Found a non-blank
-                rel(*this, sudokuPositions[i] == val);
+        Matrix<IntVarArray> sudokuMatrix(sudokuPositions, 9, 9);
 
+        //Add constraints for the pre-filled positions
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                int value = examples[opt.sudoku()][i][j]; //picked A1
+                if (value != 0) //Found a non-blank
+                    rel(*this, sudokuMatrix(j, i) == value);
+            }
         }
 
-        Matrix<IntVarArray> sudokuMatrix(sudokuPositions, 9, 9);
         //Distinct row and distinct column constraints
         for (int i = 0; i < 9; i++) {
-            distinct(*this, sudokuMatrix.row(i), IPL_DOM);
-            distinct(*this, sudokuMatrix.col(i), IPL_DOM);
+            distinct(*this, sudokuMatrix.row(i), opt.ipl());
+            distinct(*this, sudokuMatrix.col(i), opt.ipl());
         }
         //Each 3x3 square should have all digits 1-9 constraint
         for (int i = 0; i < 9; i += 3) {
             for (int j = 0; j < 9; j += 3) {
-                distinct(*this, sudokuMatrix.slice(i, i + 3, j, j + 3), IPL_DOM);
+                distinct(*this, sudokuMatrix.slice(i, i + 3, j, j + 3), opt.ipl());
             }
         }
 
@@ -329,7 +328,6 @@ public:
         }
         os << "-------------------------" << std::endl;
     }
-
 };
 
 /**
@@ -355,7 +353,7 @@ int main(int argc, char *argv[]) {
     Script::run<Sudoku, DFS, SudokuOptions>(opt);
 
     /**
-     * Example cmd to solve sudoku number 0:
+     * Example cmd to solve sudoku number 0 with different options, for more options see Gecode.org:
      * ./bin/sudoku -sudoku 0 -mode gist -ipl dom
      * ./bin/sudoku -sudoku 0 -mode solution -ipl speed
      * ./bin/sudoku -sudoku 0 -mode time -ipl def

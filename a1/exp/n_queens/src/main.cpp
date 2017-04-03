@@ -90,7 +90,7 @@ public:
                 break;
         }
 
-        branch(*this, q, INT_VAR_SIZE_MIN(), INT_VAL_MED());
+        branch(*this, q, INT_VAR_SIZE_MAX(), INT_VAL_MED());
     }
 
     /// Constructor for cloning \a s

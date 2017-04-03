@@ -31,7 +31,7 @@ public:
             rel(*this, sum(boardMatrix.row(i)) == 1);
         }
 
-        //Add the constraint that there should only be 1 queen per diagonal
+        //Add the constraint that there should only be at most 1 queen per diagonal
         //for all diagonals bottom-left to top-right
         for (int i = 0; i < (int) opt.size() - 1; i++) {
             int digSize = i + 1;
@@ -49,7 +49,7 @@ public:
             rel(*this, sum(diagonal2) <= 1);
         }
 
-        //Add the constraint that there should only be 1 queen per diagonal
+        //Add the constraint that there should only be at most 1 queen per diagonal
         //for all diagonals bottom-right to top-left
         for (int i = 0; i < (int) opt.size(); i++) {
             //diagonal starting in (i,0)
@@ -70,7 +70,7 @@ public:
         }
 
         //Branching strategy
-        branch(*this, boardPositions, INT_VAR_SIZE_MIN(), INT_VAL_MED());
+        branch(*this, boardPositions, INT_VAR_SIZE_MIN(), INT_VAL_MAX());
     }
 
     /// Constructor for cloning \a s
