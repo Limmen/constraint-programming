@@ -51,7 +51,7 @@
 
 \begin{document}
 \noindent
-\large\textbf{Homework 2} \hfill \textbf{Kim Hammar} \\
+\large\textbf{Assignment 1} \hfill \textbf{Kim Hammar} \\
 \normalsize ID2204 \hfill  \textbf{Mallu} \\
 Constraint Programming \hfill Due Date: 7 April 2017\\
 
@@ -172,18 +172,90 @@ $n = 5$, first-fail vs random heuristic search trees:
 \subsection*{Pros and Cons}
 \textbf{Pros}:
 \begin{itemize}
-\item Less constraints than for example using the binary-constraints model in the example. Since propagators are ran one at a time this is in theory good from a performance perspective. Also, in some cases since propagation is not compositional, fewer larger constraints can give better propagation. (This pro however does not hold against the PROP\_DISTINCT model in the example which only uses $3$ constraints). Note: although our Matrix-model contains less propagators than the example-binary model, in practice our model is not more efficient.
+\item Less constraints than for example using the binary-constraints model in the example. Since propagators are ran one at a time this is in theory good from a performance perspective. Also, in some cases since propagation is not compositional, fewer larger constraints can give better propagation.
 \item Very small domains for each value: $\{0,1\}$ compared to the non-matrix approach with domains of $\{0, \ldots, n\}$, but this is a trade-off since the matrix-model contains a lot more variables ($n^2$ vs $n$) compared to the example.
 \item Very intuitive model and probably the model chosen by someone familiar with the n-queens problem but not with constraint-programming techniques.
 \end{itemize}
 \textbf{Cons}:
 \begin{itemize}
-\item In practice our solution with the Matrix-model is slower than the example solution.
 \item The matrix model is less memory-efficient.
-\item A lot more variables are necessary.
-\item The example enforces one constraint just by modelling in a smart way: one queen per column constraint is enforced by the one-dimensional array. This is not utilised in the matrix-model
+\item A lot more variables.
+\item The example enforces one constraint just by modelling in a smart way: one queen per column constraint is enforced by the one-dimensional array. This is not utilised in the matrix-model.
 \end{itemize}
 \section*{How to run}
+Both Gecode models are subclasses of \texttt{Script} and you can run the from commandline with all options provided by default Gecode-script. For the sudoku model you can also specify which of the example-problems you want to solve by adding the flag: \texttt{-sudoku <num>}.
+
+\textbf{Examples}:
+
+Find all solutions to the 5-queens problem, not using GIST:
+\begin{verbatim}
+./queens -mode solution -solutions 0 10
+
+.
+.
+
+Queens Board Solution: 
+. . . . . . . . . Q 
+. . . . . . . Q . . 
+. . . . Q . . . . . 
+. . Q . . . . . . . 
+Q . . . . . . . . . 
+. . . . . Q . . . . 
+. Q . . . . . . . . 
+. . . . . . . . Q . 
+. . . . . . Q . . . 
+. . . Q . . . . . . 
+-------------------
+
+Initial
+        propagators: 58
+        branchers:   1
+
+Summary
+        runtime:      0.088 (88.935 ms)
+        solutions:    724
+        propagations: 335188
+        nodes:        11809
+        failures:     5181
+        restarts:     0
+        no-goods:     0
+        peak depth:   13
+\end{verbatim}
+
+Solve sudoku example number $0$ without gist and propagation-level: Domain-consistency:
+\begin{verbatim}
+./sudoku -sudoku 0 -mode solution -ipl dom
+
+Sudoku
+-------------------------
+|3|7|8  |2|6|5|  |9|1|4|
+|5|9|6  |8|1|4|  |7|3|2|
+|1|4|2  |7|3|9|  |5|6|8|
+
+|2|1|7  |3|8|6|  |4|5|9|
+|8|5|4  |9|7|1|  |6|2|3|
+|6|3|9  |5|4|2|  |8|7|1|
+
+|7|8|5  |4|2|3|  |1|9|6|
+|4|6|3  |1|9|7|  |2|8|5|
+|9|2|1  |6|5|8|  |3|4|7|
+-------------------------
+
+Initial
+        propagators: 27
+        branchers:   1
+
+Summary
+        runtime:      0.000 (0.752 ms)
+        solutions:    1
+        propagations: 172
+        nodes:        1
+        failures:     0
+        restarts:     0
+        no-goods:     0
+        peak depth:   0
+
+\end{verbatim}
 \bibliography{references}{}
 \bibliographystyle{plain}
 \end{document}

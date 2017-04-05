@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.8.25)  1 APR 2017 09:43
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.8.25)  5 APR 2017 19:13
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -637,26 +637,26 @@ File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 175.
- [6 <./rnd_all_5.pdf>]
+ [6 <./rnd_all_5.pdf>] [7]
 No file report.bbl.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 189.
-[7]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 189.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 261.
+[8]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 261.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 189.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 189.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 261.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 261.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 189.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 261.
  ) 
 Here is how much of TeX's memory you used:
- 10159 strings out of 493304
- 143515 string characters out of 6139871
- 336018 words of memory out of 5000000
+ 10160 strings out of 493304
+ 143521 string characters out of 6139871
+ 337018 words of memory out of 5000000
  13388 multiletter control sequences out of 15000+600000
  46196 words of font info for 44 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 29i,7n,35p,1090b,391s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,7n,35p,1090b,381s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
 ips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share
 /texmf/fonts/enc/dvips/lm/lm-mathsy.enc}</usr/share/texmf/fonts/type1/public/lm
@@ -666,10 +666,10 @@ f/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi
 /type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></
 usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/
 public/lm/lmtt10.pfb>
-Output written on report.pdf (7 pages, 179493 bytes).
+Output written on report.pdf (8 pages, 186826 bytes).
 PDF statistics:
- 121 PDF objects out of 1000 (max. 8388607)
- 97 compressed objects within 1 object stream
- 24 named destinations out of 1000 (max. 500000)
+ 127 PDF objects out of 1000 (max. 8388607)
+ 101 compressed objects within 2 object streams
+ 25 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
