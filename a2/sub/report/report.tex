@@ -1,0 +1,168 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage[english]{babel} 
+\usepackage{natbib}
+\usepackage{cite}
+\usepackage[parfill]{parskip}
+\usepackage{enumerate}
+\usepackage{float}%for image positions
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  citecolor=black,
+  filecolor=black,
+  linkcolor=black,
+  urlcolor=black
+}
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{invariant}[theorem]{Invariant}
+\newtheorem{breakpoint}[theorem]{Breakpoint}
+\newtheorem{problem}{Problem}
+\newtheorem{definition}{Definition} 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{pifont}
+\usepackage{multirow,array}
+\usepackage{centernot}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+
+\newcommand\mymapsto{\mathrel{\ooalign{$\rightarrow$\cr%
+      \kern-.15ex\raise.275ex\hbox{\scalebox{1}[0.522]{$\mid$}}\cr}}}
+
+\lstdefinestyle{base}{
+  language=C,
+  emptylines=1,
+  breaklines=true,
+  basicstyle=\ttfamily\color{black},
+  moredelim=**[is][\color{red}]{@}{@},
+}
+
+\usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
+\usepackage{lipsum} %This package just generates Lorem Ipsum filler text. 
+\usepackage{fullpage} % changes the margin
+
+\begin{document}
+\noindent
+\large\textbf{Assignment 2} \hfill \textbf{Kim Hammar} \\
+\normalsize ID2204 \hfill  \textbf{Mallu} \\
+Constraint Programming \hfill Due Date: 30 April 2017\\
+
+\section*{Simple linear inequality}
+\subsection*{Propagator Definition}
+Propagator $p_{lin} \in c \equiv a \cdot x + b \cdot y \leq c \quad \text{ where }x,y \text{ are variables and } a,b,c \text{ are integer constants} $
+
+\begin{gather*}
+p_{lin}(s) = 
+\begin{cases}
+  x \mymapsto \{n \in s(x) | n \leq \frac{c - (b \cdot \min s(y))}{a} \}\\
+  y \mymapsto \{n \in s(y) | n \leq \frac{c - (a \cdot \min s(x))}{b} \}\\
+\end{cases}
+\end{gather*}
+\subsection*{Idempotence}
+\begin{theorem}
+The propagator $p_{lin}$ is idempotent
+\end{theorem}
+Proof sketch:
+\begin{proof}
+Assume by contradiction that $p_{lin}$ is not idempotent, then there exists two stores $p_{lin}(s) = s'$ and $p_{lin}(s') = s''$ such that  $s' \neq s''$. If $s'$ is failed then $s''$ must also be failed by the definition of the propagator. From now on we therefore consider the case where $s'$ is not failed.
+
+  $p_{lin}$ is by definition contracting which means that if $s' \neq s''$ the following must hold: $s'' < s'$, which implies that $s''(x) \subset s'(x) \lor s''(y) \subset s'(y)$.
+
+By definition of $p_{lin}$, $\forall n \in s'(x), n \leq  \frac{c - (b \cdot \min s(y))}{a}$ and $\forall n \in s'(y), n \leq  \frac{c - (a \cdot \min s(x))}{b}$. From this it follows that for it to be possible that $s'' < s'$ it must be that $\min s'(x)$ is less than $\min s(x)$ or $\min s'(y)$ is less than $s(y)$. This is a contradiction of the contracting-property of $p_{lin}$ since the minimum value of x or y can only be decreased from store $s$ to $s'$ if a value $v \leq \min s(x)$ is added to the domain of $x$ or a value $w \leq \min s(y)$ is added to the domain of $y$.
+\end{proof}
+\subsection*{Subsumption}
+Detect subsumption:
+
+$$p_{lin}(s) =  \text{\textbf{let }} s' = p_{lin}(s)$$
+$$\text{ \textbf{if }} a \cdot \max s(x) + b \cdot \max s(y) \leq c$$
+$$\text{\textbf{then }} \langle subsumed, s' \rangle \text{ \textbf{else} } \langle fix, s' \rangle$$
+
+
+\section*{Changing Propagation Order}
+No, it is not true. Assuming a propagator exhibits the properties described and proved in the course notes \citep{schulte_notes}, we know that when executing a set of propagators on a store $s$ until all propagators are at fixpoint, the fixpoint will be the weakest simultaneous fixpoint, no matter in which order the propagators were applied. I.e the order of propagation does not matter when running until simultaneous fixpoint. However, this does not imply that $p_1(p_2(s)) \neq p_2(p_1(s))$ if the propagators are not at fixpoint. 
+
+\begin{theorem}
+$$p_1(p_2(s)) \neq p_2(p_1(s)) \text{  for all propagators/stores}$$ 
+\end{theorem}
+
+\begin{proof}
+By construction of counterexample.
+
+  Let $s_1$ be a constraint store and $p_1$, $p_2$ be two correct propagators according to the definition in \citep{schulte_notes}, i.e monotonic, contracting and solution preserving propagators.
+  $$s_1 = \{x \mymapsto \{1, \ldots, 10\}, y \mymapsto \{1, \ldots, 10\} \}$$
+  $p_1$ implementing the constraint $x \leq 3$ and $p_2$ implementing the constraint $x+y \geq 10$.
+
+\begin{gather*}
+p_{1}(s) = 
+\begin{cases}
+  x \mymapsto \{n \in s(x) | n \leq 3 \}\\
+  y \mymapsto s(y)\\
+\end{cases}
+\end{gather*}
+
+\begin{gather*}
+p_{2}(s) = 
+\begin{cases}
+  x \mymapsto \{n \in s(x) | n \geq 10 - \max s(y) \}\\
+  y \mymapsto \{n \in s(y) | n \geq 10 - \max s(x) \}\\
+\end{cases}
+\end{gather*}
+
+$$p_1(s_1) = s_2 = \{x \mymapsto \{1, \ldots, 3\}, y \mymapsto \{1, \ldots, 10\} \}$$
+
+$$p_2(s_1) = s_1 = \{x \mymapsto \{1, \ldots, 10\}, y \mymapsto \{1, \ldots, 10\} \}$$
+
+$$p_2(s_2) = s_3 = \{x \mymapsto \{1, \ldots, 3\}, y \mymapsto \{7, \ldots, 10\} \}$$
+
+$$p_1(p_2(s_1)) = p_1(s_1) = s_2$$
+
+$$p_2(p_1(s_1)) = p_2(s_2) = s_3$$
+
+$$s_2 \neq s_3$$
+\end{proof}
+
+\section*{Idempotent Propagators}
+Yes it is true. This follows from the fact that propagators are contracting and that constraint stores have \underline{finite} sets of variables and values.
+
+\begin{theorem}
+  $$\exists n \in \mathbb{N} \text{ such that } p^n \text{ is idempotent for any store } s \text{ and correct propagator }p$$
+\end{theorem}
+\begin{proof}
+By definition a constraint store that is input to constraint propagation has a finite set of values and variables \citep{schulte_notes}. This implies that the set of variables $var(p)$ is a finite set where $|var(p)| \in \mathbb{N}$ and that the set of values $s(x)$ for all variables $x \in var(p)$ is a finite set where $|s(x)| \in \mathbb{N}$.
+
+A correct propagator is contracting, this implies that if $p^n(s)$ is not idempotent then $p^{n+1}(s) < p^n(s)$. I.e $p^{n+1}(s)$ is strictly stronger than $p^n(s)$, which means that $\exists x \in var(p) \text{ where } p^{n+1}(s)(x) \subset p^{n}(s)(x)$.
+
+A propagator $p$ must by definition be idempotent on a store $s$ if $s(x) = \emptyset \quad \forall x \in var(p)$, i.e $p(s) = s$.
+
+Now we can see that $p^n(s)$ for arbitrary natural number $n$ and constraint store $s$ computes a sequence of stores $s > s_1 > s_2 > s_3 > \cdots > s_{n-1}$ that is a well founded order (this is a property of the $>$ relation on stores\citep{schulte_notes}).
+  $$\implies \exists n \in \mathbb{N} \text{ such that } p^n \text{ is idempotent for any store } s \text{ and correct propagator }p$$
+\end{proof}
+
+The idempotent property is not true for arbitrary functions on arbitrary sets. A counterexample is a function $f$ on sets that is not contracting but ever expanding by adding a natural number to the set.
+\begin{theorem}
+Arbitrary functions on arbitrary sets are not always idempotent
+\end{theorem}
+\begin{proof}
+By construction of a counterexample.
+  
+$$f(s) = s \cup \{x\} \land x \in \mathbb{N} \setminus s$$
+
+$$\lim_{x\to\infty} |f(x)| = \infty$$
+\end{proof}
+
+\bibliography{references}{}
+\bibliographystyle{plain}
+\end{document}

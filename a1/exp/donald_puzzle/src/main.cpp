@@ -42,8 +42,19 @@ public:
     }
 
     virtual void print(std::ostream &os) const {
-        os
+      IntVar d = letters[0];
+      IntVar o = letters[1];
+      IntVar n = letters[2];
+      IntVar a = letters[3];
+      IntVar l = letters[4];
+      IntVar g = letters[5];
+      IntVar e = letters[6];
+      IntVar r = letters[7];
+      IntVar b = letters[8];
+      IntVar t = letters[9];
+      os
                 << letters << std::endl;
+      os << d << o << n << a << l << d << " + " << g << e << r << a << l << d << " = " << r << o << b << e << r << t << std::endl;
     }
 
 };

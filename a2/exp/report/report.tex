@@ -1,0 +1,126 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage[english]{babel} 
+\usepackage{natbib}
+\usepackage{cite}
+\usepackage[parfill]{parskip}
+\usepackage{enumerate}
+\usepackage{float}%for image positions
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  citecolor=black,
+  filecolor=black,
+  linkcolor=black,
+  urlcolor=black
+}
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{invariant}[theorem]{Invariant}
+\newtheorem{breakpoint}[theorem]{Breakpoint}
+\newtheorem{problem}{Problem}
+\newtheorem{definition}{Definition} 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{pifont}
+\usepackage{multirow,array}
+\usepackage{centernot}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+
+\newcommand\mymapsto{\mathrel{\ooalign{$\rightarrow$\cr%
+  \kern-.15ex\raise.275ex\hbox{\scalebox{1}[0.522]{$\mid$}}\cr}}}
+
+
+\lstdefinestyle{base}{
+  language=C,
+  emptylines=1,
+  breaklines=true,
+  basicstyle=\ttfamily\color{black},
+  moredelim=**[is][\color{red}]{@}{@},
+}
+
+\usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
+\usepackage{lipsum} %This package just generates Lorem Ipsum filler text. 
+\usepackage{fullpage} % changes the margin
+
+\begin{document}
+\noindent
+\large\textbf{Assignment 2} \hfill \textbf{Kim Hammar} \\
+\normalsize ID2204 \hfill  \textbf{Mallu} \\
+Constraint Programming \hfill Due Date: 30 April 2017\\
+
+\section*{Propagator Rewriting}
+For a correct rewrite of a propagator $p$ to another propagator $p'$ on a store $s$, the following must hold:
+$$p(s') = p'(s') \quad \forall s' \text{ where } s' \leq s$$
+
+I.e a propagator can be rewritten to another (simpler) propagator if the propagators behave the same on all stronger stores than the current store. Typical usage of propagator rewriting is to simplify a propagator when a store $s$ is reached, where complex propagation is no longer necessary due to the reduced variable domains.
+
+To rewrite a single propagator $p$ to a set of $Q$ simpler propagators it is necessary for correctness that the following holds:
+
+$$p(s') = \displaystyle\bigcap q(s') \quad \forall q \in Q \quad \forall s' \text{ where } s' \leq s$$
+
+A modification to the propagation algorithm to support propagator rewriting might be to allow propagators to send an extra status message: $\{rewrite, Q\}$ and the algorithm can then replace $p$ with the propagators in $Q$. The correctness of the relation between $Q$ and $p$ would be up to the propagator itself. I.e you add the following line to the algorithm:
+
+$$\text{\texttt{\textbf{if} ms = \{rewrite, Q\} \textbf{then }}} EP:= (EP - \{ep\}) \cup Q$$
+
+\section*{An Addition Propagator}
+\subsection*{Propagator Definition}
+Propagator $p_+ \in c \equiv x + y = z$.
+\begin{gather*}
+p_+(s) = 
+\begin{cases}
+  x \mymapsto \{n \in s(x) | \min s(z) - \max s(y) \leq n \leq \max s(z) - \min s(y) \}\\
+  y \mymapsto \{n \in s(y) | \min s(z) - \max s(x) \leq n \leq \max s(z) - \min s(x) \}\\
+  z \mymapsto \{n \in s(z) | \min s(x) + \min s(y) \leq n \leq \max s(x) + \max s(y) \}\\    
+\end{cases}
+\end{gather*}
+\subsection*{Idempotence}
+\begin{theorem}
+The propagator $p_+$ is not idempotent.
+\end{theorem}
+\begin{proof}
+If $p_+$ is idempotent then $p_+(p_+(s)) = p_+(s) \quad \forall s$, 
+Counterexample:
+
+$$s = \{x \mymapsto \{0,4\}, y \mymapsto \{0,4\}, z \mymapsto \{0,1,2\}\}$$
+$$p_+(s) = s' = \{x \mymapsto \{0\}, y \mymapsto \{0\}, z \mymapsto \{0,1,2\}\}$$
+$$p_+(s') = s'' = \{x \mymapsto \{0\}, y \mymapsto \{0\}, z \mymapsto \{0\}\}$$
+
+$$\therefore s' \neq s'' \quad Q.E.D$$
+
+\end{proof}
+\subsection*{Subsumption}
+Detect subumption:
+
+$$p_+(s) = \text{\textbf{let }} s' = p_+(s),\quad s'' = p_+(s')$$
+$$\text{ \textbf{if }} |s'(x)| = 1 \land |s'(y)| = 1 \land |s'(z)| = 1 \land s'(x) + s'(y) = s'(z)$$
+$$\text{\textbf{then }} \langle subsumed, s'\rangle$$
+$$\text{ \textbf{else if} } s'' = s' \quad \langle fix, s' \rangle$$
+$$\text{ \textbf{else if} } s'' \neq s' \quad \langle nofix, s' \rangle$$
+
+\subsection*{Rewriting}
+Rewrite into a simpler propagator:
+
+Assume for instance that propagation have computed $s(x) = {1}$ then $p_+$ can be rewritten to the following simpler (more efficient) propagator:
+\begin{gather*}
+p_+(s) = 
+\begin{cases}
+  y \mymapsto \{n \in s(y) | \min s(z) - 1 \leq n \leq \max s(z) - 1 \}\\
+  z \mymapsto \{n \in s(z) | \min s(y) + 1 \leq n \leq \max s(y) + 1 \}\\    
+\end{cases}
+\end{gather*}
+\bibliography{references}{}
+\bibliographystyle{plain}
+\end{document}
