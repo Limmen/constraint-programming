@@ -62,7 +62,7 @@ Constraint Programming \hfill Due Date: 30 April 2017\\
 
 \section*{Simple linear inequality}
 \subsection*{Propagator Definition}
-Propagator $p_{lin} \in c \equiv a \cdot x + b \cdot y \leq c \quad \text{ where }x,y \text{ are variables and } a,b,c \text{ are integer constants} $
+Propagator $p_{lin} \in constraint \equiv a \cdot x + b \cdot y \leq c \quad \text{ where }x,y \text{ are variables and } a,b,c \text{ are integer constants} $
 
 \begin{gather*}
 p_{lin}(s) = 
@@ -81,7 +81,7 @@ Assume by contradiction that $p_{lin}$ is not idempotent, then there exists two 
 
   $p_{lin}$ is by definition contracting which means that if $s' \neq s''$ the following must hold: $s'' < s'$, which implies that $s''(x) \subset s'(x) \lor s''(y) \subset s'(y)$.
 
-By definition of $p_{lin}$, $\forall n \in s'(x), n \leq  \frac{c - (b \cdot \min s(y))}{a}$ and $\forall n \in s'(y), n \leq  \frac{c - (a \cdot \min s(x))}{b}$. From this it follows that for it to be possible that $s'' < s'$ it must be that $\min s'(x)$ is less than $\min s(x)$ or $\min s'(y)$ is less than $s(y)$. This is a contradiction of the contracting-property of $p_{lin}$ since the minimum value of x or y can only be decreased from store $s$ to $s'$ if a value $v \leq \min s(x)$ is added to the domain of $x$ or a value $w \leq \min s(y)$ is added to the domain of $y$.
+By definition of $p_{lin}$, $\forall n \in s'(x), n \leq  \frac{c - (b \cdot \min s(y))}{a}$ and $\forall n \in s'(y), n \leq  \frac{c - (a \cdot \min s(x))}{b}$. From this it follows that for it to be possible that $s'' < s'$ it must be that $\min s'(x)$ is less than $\min s(x)$ or $\min s'(y)$ is less than $\min s(y)$. This is a contradiction of the contracting-property of $p_{lin}$ since the minimum value of x or y can only be increased from store $s$ to $s'$, never decreased. To decrease the minimum value of $x$ or $y$ it is necessary to \underline{add} a value to the store, which contradicts the contracting property. 
 \end{proof}
 \subsection*{Subsumption}
 Detect subsumption:
@@ -92,10 +92,10 @@ $$\text{\textbf{then }} \langle subsumed, s' \rangle \text{ \textbf{else} } \lan
 
 
 \section*{Changing Propagation Order}
-No, it is not true. Assuming a propagator exhibits the properties described and proved in the course notes \citep{schulte_notes}, we know that when executing a set of propagators on a store $s$ until all propagators are at fixpoint, the fixpoint will be the weakest simultaneous fixpoint, no matter in which order the propagators were applied. I.e the order of propagation does not matter when running until simultaneous fixpoint. However, this does not imply that $p_1(p_2(s)) \neq p_2(p_1(s))$ if the propagators are not at fixpoint. 
+No, it is not true. Assuming a propagator exhibits the properties described and proved in the course notes \citep{schulte_notes}, we know that when executing a set of propagators on a store $s$ until all propagators are at fixpoint, the fixpoint will be the weakest simultaneous fixpoint, no matter in which order the propagators were applied. I.e the order of propagation does not matter when running until simultaneous fixpoint. However, this does not imply that $p_1(p_2(s)) \neq p_2(p_1(s))$ if the propagators are not at fixpoint. Intermediate stores in the propagation are affected by the order in which propagators are applied.
 
 \begin{theorem}
-$$p_1(p_2(s)) \neq p_2(p_1(s)) \text{  for all propagators/stores}$$ 
+$$\neg(p_1(p_2(s)) = p_2(p_1(s)) \quad \forall p, s)$$
 \end{theorem}
 
 \begin{proof}
@@ -135,7 +135,7 @@ $$s_2 \neq s_3$$
 \end{proof}
 
 \section*{Idempotent Propagators}
-Yes it is true. This follows from the fact that propagators are contracting and that constraint stores have \underline{finite} sets of variables and values.
+Yes it is true. This follows from the fact that propagators are contracting and that constraint stores have \underline{finite} sets of variables and values. For any correct propagator $p$ and a arbitrary store $s$ with finite variables and values, it is possible to iterate the propagator to idempotency through $n$ iterations, where $n \in \mathbb{N}$.
 
 \begin{theorem}
   $$\exists n \in \mathbb{N} \text{ such that } p^n \text{ is idempotent for any store } s \text{ and correct propagator }p$$

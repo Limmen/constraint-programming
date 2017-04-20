@@ -121,6 +121,32 @@ p_+(s) =
   z \mymapsto \{n \in s(z) | \min s(y) + 1 \leq n \leq \max s(y) + 1 \}\\    
 \end{cases}
 \end{gather*}
+
+
+\subsection*{Propagating on paper}
+Propagator $p \in \text{constraint } c \equiv x < y \land y < x$.
+
+\begin{gather*}
+p(s) = 
+\begin{cases}
+  x \mymapsto \{n \in s(x) | n \max s(y) \}\\
+  y \mymapsto \{n \in s(y) | n \max s(x) \}\\
+\end{cases}
+\end{gather*}
+
+$U = \{0,1,2,3\}$
+
+Initial store $s_1 = \{x \mymapsto {0,1,2,3}, y \mymapsto {0,1,2,3}\}$
+
+$p(s_1) = \{\text{\texttt{nofix}}, s_2\} = \{\text{\texttt{nofix}}, \{x \mymapsto {0,1,2}, y \mymapsto {0,1,2}\}\}$
+
+$p(s_2) = \{\text{\texttt{nofix}}, s_3\} = \{\text{\texttt{nofix}}, \{x \mymapsto {0,1}, y \mymapsto {0,1}\}\}$
+
+$p(s_3) = \{\text{\texttt{nofix}}, s_4\} = \{\text{\texttt{nofix}}, \{x \mymapsto {0}, y \mymapsto {0}\}\}$
+
+$p(s_4) = \{\text{\texttt{fix}}, s_5\} = \{\text{\texttt{fix}}, \{x \mymapsto \emptyset, y \mymapsto \emptyset\}\}$ 
+
+
 \bibliography{references}{}
 \bibliographystyle{plain}
 \end{document}

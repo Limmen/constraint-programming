@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.8.25)  19 APR 2017 10:18
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.8.25)  20 APR 2017 15:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -580,12 +580,12 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 65.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (18.80652pt too wide) in paragraph at lines 65--66
+Overfull \hbox (65.10535pt too wide) in paragraph at lines 65--66
 \T1/lmr/m/n/10.95 Propagator $\OML/lmm/m/it/10.95 p[] \OMS/lmsy/m/n/10.95 2 \OM
-L/lmm/m/it/10.95 c \OMS/lmsy/m/n/10.95 ^^Q \OML/lmm/m/it/10.95 a \OMS/lmsy/m/n/
-10.95 ^^A \OML/lmm/m/it/10.95 x \OT1/lmr/m/n/10.95 + \OML/lmm/m/it/10.95 b \OMS
-/lmsy/m/n/10.95 ^^A \OML/lmm/m/it/10.95 y \OMS/lmsy/m/n/10.95 ^^T \OML/lmm/m/it
-/10.95 c []x; y[]a; b; c[]$ 
+L/lmm/m/it/10.95 constraint \OMS/lmsy/m/n/10.95 ^^Q \OML/lmm/m/it/10.95 a \OMS/
+lmsy/m/n/10.95 ^^A \OML/lmm/m/it/10.95 x \OT1/lmr/m/n/10.95 + \OML/lmm/m/it/10.
+95 b \OMS/lmsy/m/n/10.95 ^^A \OML/lmm/m/it/10.95 y \OMS/lmsy/m/n/10.95 ^^T \OML
+/lmm/m/it/10.95 c []x; y[]a; b; c[]$ 
  []
 
 
@@ -628,7 +628,7 @@ Here is how much of TeX's memory you used:
  13318 multiletter control sequences out of 15000+600000
  60395 words of font info for 47 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 29i,21n,35p,612b,410s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,21n,35p,671b,337s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
 ips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share
 /texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm
@@ -640,7 +640,7 @@ ts/type1/public/lm/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb>
 public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/s
 hare/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (3 pages, 158070 bytes).
+Output written on report.pdf (3 pages, 158573 bytes).
 PDF statistics:
  91 PDF objects out of 1000 (max. 8388607)
  74 compressed objects within 1 object stream
