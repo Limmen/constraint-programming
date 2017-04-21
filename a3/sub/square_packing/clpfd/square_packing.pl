@@ -54,10 +54,11 @@ overlap(X, Squares):-
 overlap(square(X,N,Y,N), square(X1, N1, Y1, N1)):-
     overlap_axis(X, N, X1, N1, B1),
     overlap_axis(Y, N, Y1, N1, B2),
-    non_overlap_axis(X, N, X1, N1, B3),
-    non_overlap_axis(Y, N, Y1, N1, B4),
-    B1 #==> B4, %%Overlapping X-axis implies Y-axis must not overlap
-    B2 #==> B3. %%Overlapping Y-axis implies X-axis must not overlap
+    sat(~(B1*B2)).
+%%non_overlap_axis(X, N, X1, N1, B3),
+%%non_overlap_axis(Y, N, Y1, N1, B4),
+%%B1 #==> B4, %%Overlapping X-axis implies Y-axis must not overlap
+%%B2 #==> B3. %%Overlapping Y-axis implies X-axis must not overlap
 
 overlap_axis(X, N, X1, N1, B):-
     B1 #<==> (X #=< X1),
