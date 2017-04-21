@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.8.25)  20 APR 2017 15:01
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.8.25)  21 APR 2017 14:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -611,15 +611,15 @@ n/10.95 ) \OMS/lmsy/m/n/10.95 ^^Z
  []
 
 (./report.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 168.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 171.
  [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 168.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 171.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 168.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 168.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 171.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 171.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 168.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 171.
  ) 
 Here is how much of TeX's memory you used:
  10075 strings out of 493304
@@ -640,7 +640,7 @@ ts/type1/public/lm/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb>
 public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/s
 hare/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (3 pages, 158573 bytes).
+Output written on report.pdf (3 pages, 158865 bytes).
 PDF statistics:
  91 PDF objects out of 1000 (max. 8388607)
  74 compressed objects within 1 object stream

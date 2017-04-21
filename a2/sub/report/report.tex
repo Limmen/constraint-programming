@@ -157,10 +157,13 @@ Arbitrary functions on arbitrary sets are not always idempotent
 \end{theorem}
 \begin{proof}
 By construction of a counterexample.
-  
-$$f(s) = s \cup \{x\} \land x \in \mathbb{N} \setminus s$$
 
-$$\lim_{x\to\infty} |f(x)| = \infty$$
+let $f \in X \rightarrow X$ be a function taking a set $X$ of a natural number $x$ as argument.
+
+$$f(\{x\}) = \{x+1\}$$
+Example:
+$$f^3(\{1\}) = f(f(f(\{1\}))) = f(f(\{2\})) = f(\{3\}) = \{4\}$$
+$$\lim_{n\to\infty} f^n = \{\infty\}$$
 \end{proof}
 
 \bibliography{references}{}

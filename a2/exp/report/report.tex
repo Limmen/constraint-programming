@@ -122,8 +122,23 @@ p_+(s) =
 \end{cases}
 \end{gather*}
 
+\section*{Generalizing to Arbitrary Equations}
 
-\subsection*{Propagating on paper}
+\begin{gather*}
+p_=(s) = 
+\begin{cases}
+  \forall i \in \{1, \ldots, n\}, x_i \mymapsto \{n \in s(x_i) | s(x_i) = \frac{c}{a_i}\}\\
+\end{cases}
+\end{gather*}
+
+\begin{theorem}
+  $p_=$ is idempotent
+\end{theorem}
+\begin{proof}
+This follows from contracting property of propagator and that $a_i$, $c$ are constants. After running the propagator once either we have a failed store or $x_i = \frac{c}{a_i}$, then there are no more values to remove and propagator is not allowed to add any values.
+\end{proof}
+
+\section*{Propagating on paper}
 Propagator $p \in \text{constraint } c \equiv x < y \land y < x$.
 
 \begin{gather*}
