@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/kim/workspace/gecode/constraint_programming_gecode/a1/exp/send_more_money_1/src/main.cpp
+gecode/int.hh
+-
+gecode/search.hh
+-
+

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.4.16)  23 APR 2017 12:35
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.4.16)  23 APR 2017 11:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -580,70 +580,39 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 65.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (65.10535pt too wide) in paragraph at lines 65--66
-\T1/lmr/m/n/10.95 Propagator $\OML/lmm/m/it/10.95 p[] \OMS/lmsy/m/n/10.95 2 \OM
-L/lmm/m/it/10.95 constraint \OMS/lmsy/m/n/10.95 ^^Q \OML/lmm/m/it/10.95 a \OMS/
-lmsy/m/n/10.95 ^^A \OML/lmm/m/it/10.95 x \OT1/lmr/m/n/10.95 + \OML/lmm/m/it/10.
-95 b \OMS/lmsy/m/n/10.95 ^^A \OML/lmm/m/it/10.95 y \OMS/lmsy/m/n/10.95 ^^T \OML
-/lmm/m/it/10.95 c []x; y[]a; b; c[]$ 
- []
-
-
-Overfull \hbox (0.52539pt too wide) in paragraph at lines 82--83
-[]\T1/lmr/m/n/10.95 Assume by con-tra-dic-tion that $\OML/lmm/m/it/10.95 p[]$ \
-T1/lmr/m/n/10.95 is not idem-po-tent, then there ex-ists two stores $\OML/lmm/m
-/it/10.95 p[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 ) =
- []
-
+No file report.bbl.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 81.
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Overfull \hbox (12.92693pt too wide) in paragraph at lines 148--149
-\OML/lmm/m/it/10.95 p[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10
-.95 )$\T1/lmr/m/n/10.95 . I.e $\OML/lmm/m/it/10.95 p[]\OT1/lmr/m/n/10.95 (\OML/
-lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 )$ \T1/lmr/m/n/10.95 is strictly stronger th
-an $\OML/lmm/m/it/10.95 p[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/
-n/10.95 )$\T1/lmr/m/n/10.95 , which means that $\OMS/lmsy/m/n/10.95 9\OML/lmm/m
-/it/10.95 x \OMS/lmsy/m/n/10.95 2 \OML/lmm/m/it/10.95 var\OT1/lmr/m/n/10.95 (\O
-ML/lmm/m/it/10.95 p\OT1/lmr/m/n/10.95 )[]\OML/lmm/m/it/10.95 p[]\OT1/lmr/m/n/10
-.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 )(\OML/lmm/m/it/10.95 x\OT1/lmr/m/
-n/10.95 ) \OMS/lmsy/m/n/10.95 ^^Z
- []
-
-(./report.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 174.
- [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 174.
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 81.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 174.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 174.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 81.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 81.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 174.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 81.
  ) 
 Here is how much of TeX's memory you used:
- 10075 strings out of 493304
- 142277 string characters out of 6139871
- 338635 words of memory out of 5000000
- 13318 multiletter control sequences out of 15000+600000
- 60395 words of font info for 47 fonts, out of 8000000 for 9000
+ 10045 strings out of 493304
+ 141930 string characters out of 6139871
+ 333620 words of memory out of 5000000
+ 13308 multiletter control sequences out of 15000+600000
+ 35634 words of font info for 40 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 29i,21n,35p,671b,337s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
-ips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share
-/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm
--mathit.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texm
-f/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmex
-10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fon
-ts/type1/public/lm/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb>
-</usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/
-public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/s
-hare/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (3 pages, 158758 bytes).
+ 29i,5n,35p,333b,335s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
+c/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/s
+hare/texmf/fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texmf/fonts/type1/public/lm
+/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texm
+f/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi
+8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts
+/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></
+usr/share/texmf/fonts/type1/public/lm/lmsy8.pfb>
+Output written on report.pdf (1 page, 114008 bytes).
 PDF statistics:
- 91 PDF objects out of 1000 (max. 8388607)
- 74 compressed objects within 1 object stream
- 16 named destinations out of 1000 (max. 500000)
+ 54 PDF objects out of 1000 (max. 8388607)
+ 42 compressed objects within 1 object stream
+ 5 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

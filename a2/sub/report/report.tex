@@ -58,7 +58,7 @@
 \noindent
 \large\textbf{Assignment 2} \hfill \textbf{Kim Hammar} \\
 \normalsize ID2204 \hfill  \textbf{Mallu} \\
-Constraint Programming \hfill Due Date: 30 April 2017\\
+Constraint Programming \hfill Due Date: 24 April 2017\\
 
 \section*{Simple linear inequality}
 \subsection*{Propagator Definition}
@@ -72,10 +72,12 @@ p_{lin}(s) =
 \end{cases}
 \end{gather*}
 \subsection*{Idempotence}
+
 \begin{theorem}
 The propagator $p_{lin}$ is idempotent
 \end{theorem}
 Proof sketch:
+
 \begin{proof}
 Assume by contradiction that $p_{lin}$ is not idempotent, then there exists two stores $p_{lin}(s) = s'$ and $p_{lin}(s') = s''$ such that  $s' \neq s''$. If $s'$ is failed then $s''$ must also be failed by the definition of the propagator. From now on we therefore consider the case where $s'$ is not failed.
 
@@ -84,9 +86,9 @@ Assume by contradiction that $p_{lin}$ is not idempotent, then there exists two 
 By definition of $p_{lin}$, $\forall n \in s'(x), n \leq  \frac{c - (b \cdot \min s(y))}{a}$ and $\forall n \in s'(y), n \leq  \frac{c - (a \cdot \min s(x))}{b}$. From this it follows that for it to be possible that $s'' < s'$ it must be that $\min s'(x)$ is less than $\min s(x)$ or $\min s'(y)$ is less than $\min s(y)$. This is a contradiction of the contracting-property of $p_{lin}$ since the minimum value of x or y can only be increased from store $s$ to $s'$, never decreased. To decrease the minimum value of $x$ or $y$ it is necessary to \underline{add} a value to the store, which contradicts the contracting property. 
 \end{proof}
 \subsection*{Subsumption}
-Detect subsumption:
+Detect subsumption early:
 
-$$p_{lin}(s) =  \text{\textbf{let }} s' = p_{lin}(s)$$
+$$p_{lin}(s):  \text{\textbf{let }} s' = p_{lin}(s)$$
 $$\text{ \textbf{if }} a \cdot \max s(x) + b \cdot \max s(y) \leq c$$
 $$\text{\textbf{then }} \langle subsumed, s' \rangle \text{ \textbf{else} } \langle fix, s' \rangle$$
 
@@ -138,7 +140,7 @@ $$s_2 \neq s_3$$
 Yes it is true. This follows from the fact that propagators are contracting and that constraint stores have \underline{finite} sets of variables and values. For any correct propagator $p$ and a arbitrary store $s$ with finite variables and values, it is possible to iterate the propagator to idempotency through $n$ iterations, where $n \in \mathbb{N}$.
 
 \begin{theorem}
-  $$\exists n \in \mathbb{N} \text{ such that } p^n \text{ is idempotent for any store } s \text{ and correct propagator }p$$
+  $$\exists n \in \mathbb{N} \text{ such that } p^n \text{ is idempotent } \quad \forall p,s$$
 \end{theorem}
 \begin{proof}
 By definition a constraint store that is input to constraint propagation has a finite set of values and variables \citep{schulte_notes}. This implies that the set of variables $var(p)$ is a finite set where $|var(p)| \in \mathbb{N}$ and that the set of values $s(x)$ for all variables $x \in var(p)$ is a finite set where $|s(x)| \in \mathbb{N}$.
@@ -151,7 +153,8 @@ Now we can see that $p^n(s)$ for arbitrary natural number $n$ and constraint sto
   $$\implies \exists n \in \mathbb{N} \text{ such that } p^n \text{ is idempotent for any store } s \text{ and correct propagator }p$$
 \end{proof}
 
-The idempotent property is not true for arbitrary functions on arbitrary sets. A counterexample is a function $f$ on sets that is not contracting but ever expanding by adding a natural number to the set.
+The idempotence property is not true for arbitrary functions on arbitrary sets. A counterexample is a function $f$ on sets that is not contracting.
+
 \begin{theorem}
 Arbitrary functions on arbitrary sets are not always idempotent
 \end{theorem}

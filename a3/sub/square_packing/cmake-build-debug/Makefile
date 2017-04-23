@@ -6,7 +6,7 @@ default_target: all
 
 .PHONY : default_target
 
-# Allow only one "make -f Makefile" at a time, but pass parallelism.
+# Allow only one "make -f Makefile2" at a time, but pass parallelism.
 .NOTPARALLEL:
 
 
@@ -123,33 +123,6 @@ square_packing/fast:
 	$(MAKE) -f CMakeFiles/square_packing.dir/build.make CMakeFiles/square_packing.dir/build
 .PHONY : square_packing/fast
 
-main.o: main.cpp.o
-
-.PHONY : main.o
-
-# target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/square_packing.dir/build.make CMakeFiles/square_packing.dir/main.cpp.o
-.PHONY : main.cpp.o
-
-main.i: main.cpp.i
-
-.PHONY : main.i
-
-# target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/square_packing.dir/build.make CMakeFiles/square_packing.dir/main.cpp.i
-.PHONY : main.cpp.i
-
-main.s: main.cpp.s
-
-.PHONY : main.s
-
-# target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/square_packing.dir/build.make CMakeFiles/square_packing.dir/main.cpp.s
-.PHONY : main.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -159,9 +132,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... square_packing"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
 .PHONY : help
 
 

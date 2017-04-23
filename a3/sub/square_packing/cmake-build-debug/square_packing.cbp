@@ -86,9 +86,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/kim/workspace/gecode/constraint_programming_gecode/a3/sub/square_packing/main.cpp">
-			<Option target="square_packing"/>
-		</Unit>
 		<Unit filename="/home/kim/workspace/gecode/constraint_programming_gecode/a3/sub/square_packing/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
