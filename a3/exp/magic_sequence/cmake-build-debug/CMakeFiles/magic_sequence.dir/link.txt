@@ -1,0 +1,1 @@
+/usr/bin/c++   -g   CMakeFiles/magic_sequence.dir/main.cpp.o  -o magic_sequence 

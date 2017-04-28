@@ -12,16 +12,16 @@ using namespace Gecode::Int;
 class NoOverlap : public Propagator {
 protected:
     // The x-coordinates
-    ViewArray <IntView> x;
+    ViewArray<IntView> x;
     // The width (array)
     int *w;
     // The y-coordinates
-    ViewArray <IntView> y;
+    ViewArray<IntView> y;
     // The heights (array)
     int *h;
 public:
     // Create propagator and initialize
-    NoOverlap(Home home, ViewArray <IntView> &x0, int w0[], ViewArray <IntView> &y0, int h0[]) :
+    NoOverlap(Home home, ViewArray<IntView> &x0, int w0[], ViewArray<IntView> &y0, int h0[]) :
     //Initialize variables
             Propagator(home),
             x(x0),
@@ -35,7 +35,7 @@ public:
 
     // Post no-overlap propagator. Post function decides whether propagation is necessary and then creates the propagator
     // if needed
-    static ExecStatus post(Home home, ViewArray <IntView> &x, int w[], ViewArray <IntView> &y, int h[]) {
+    static ExecStatus post(Home home, ViewArray<IntView> &x, int w[], ViewArray<IntView> &y, int h[]) {
         // Only if there is something to propagate
         if (x.size() > 1)
             (void) new(home) NoOverlap(home, x, w, y, h);
@@ -143,10 +143,10 @@ public:
             if (!canOverlap)
                 canOverlap = xCanOverlap && yCanOverlap;
         }
-        /*
+
         if (!canOverlap)
             return home.ES_SUBSUMED(*this); //No variable domains can overlap no matter assignment, no more propagation necessary
-            */
+
         if (assigned == y.size())
             return home.ES_SUBSUMED(*this); //All variables assigned, no more propagation necessary.
         return ES_NOFIX; //Propagator is not idempotent, max and min bounds might change and affect propagation.
@@ -181,8 +181,8 @@ void nooverlap(Space &home,
     // Never post a propagator in a failed space
     if (home.failed()) return;
     // Set up array of views for the coordinates
-    ViewArray <IntView> vx(home, x);
-    ViewArray <IntView> vy(home, y);
+    ViewArray<IntView> vx(home, x);
+    ViewArray<IntView> vy(home, y);
     // Set up arrays (allocated in home) for width and height and initialize
     int *wc = static_cast<Space &>(home).alloc<int>(x.size());
     int *hc = static_cast<Space &>(home).alloc<int>(y.size());
@@ -264,7 +264,7 @@ public:
         /**
          * Symmetry breaking. Restrict placement of the largest inside-square (n x n)
          */
-        rel(*this, xCoords[0] <= (s - n) / 2 && xCoords[0] > 0);
+        rel(*this, xCoords[0] <= 1 + (s - n) / 2);
         rel(*this, yCoords[0] <= xCoords[0]);
 
         /**
@@ -376,7 +376,7 @@ public:
     virtual void print(std::ostream &os) const {
         os << "SquarePacking Solution: " << std::endl;
         os << "Enclosing square size: " << s << "x" << s << std::endl;
-        os << "Square coordinates:" << std::endl;
+        os << "Square coordinates (different square 1 soliutions are excluded since it can be placed anywhere (almost)):" << std::endl;
         for (int i = 0; i < n - 1; ++i) {
             os << "square" << i + 2 << ": (" << xCoords[i] << "," << yCoords[i] << ") ";
         }

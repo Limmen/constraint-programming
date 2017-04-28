@@ -19,7 +19,8 @@ public:
     SquarePacking(const SizeOptions &opt) :
             Script(opt),
             n(opt.size()),
-            s(*this, nSquaresArea(), nSquaresStacked(n)), //Problem decomposition, constraint min and max of s, s will be the first branching to enumerate subproblems.
+            s(*this, nSquaresArea(), nSquaresStacked(
+                    n)), //Problem decomposition, constraint min and max of s, s will be the first branching to enumerate subproblems.
             xCoords(*this, n - 1, 0, nSquaresStacked(n)),//min coordinate = (0,0) max = (s,s). exclude 1x1 square
             yCoords(*this, n - 1, 0, nSquaresStacked(n))//min coordinate = (0,0) max = (s,s). exclude 1x1 square
     {
@@ -94,12 +95,14 @@ public:
         /**
          * Symmetry breaking. Restrict placement of the largest inside-square (n x n)
          */
-        rel(*this, xCoords[0] <= (s - n) / 2 && xCoords[0] > 0);
+
+        rel(*this, xCoords[0] <= 1 + (s - n) / 2);
         rel(*this, yCoords[0] <= xCoords[0]);
 
         /**
          * Empty-strip dominance
          */
+
         int gapLim = n - 1 > 45 ? 45 : n - 1;
         for (int i = 2; i < gapLim; ++i) {
             rel(*this, xCoords[i] != gap_generic(i));
@@ -206,7 +209,9 @@ public:
     virtual void print(std::ostream &os) const {
         os << "SquarePacking Solution: " << std::endl;
         os << "Enclosing square size: " << s << "x" << s << std::endl;
-        os << "Square coordinates:" << std::endl;
+        os
+                << "Square coordinates (different square 1 soliutions are excluded since it can be placed anywhere (almost)):"
+                << std::endl;
         for (int i = 0; i < n - 1; ++i) {
             os << "square" << i + 2 << ": (" << xCoords[i] << "," << yCoords[i] << ") ";
         }
