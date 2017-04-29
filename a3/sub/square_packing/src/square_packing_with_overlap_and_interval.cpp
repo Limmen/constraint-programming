@@ -1,7 +1,176 @@
 //
-// square_packing_with_overlap.cpp
-// Created by Kim Hammar & Mallu Goswami on 2017-04-21.
+// square_packing_with_overlap_and_interval.cpp
+// Created by Kim Hammar & Mallu Goswami on 2017-05-01.
 //
+
+
+#include <gecode/int.hh>
+
+using namespace Gecode;
+
+using namespace Gecode::Int;
+
+/*
+ * Custom brancher for forcing mandatory parts
+ *
+ */
+class IntervalBrancher : public Brancher {
+protected:
+    // Views for x-coordinates (or y-coordinates)
+    ViewArray <IntView> x;
+    // Width (or height) of rectangles
+    int *w;
+    // Percentage for obligatory part
+    double p;
+    // Cache of first unassigned view
+    mutable int start;
+
+    // Description
+    class Description : public Choice {
+    public:
+        // Position of view
+        int pos;
+        int split;
+        // You might need more information, please add here
+
+        /* Initialize description for brancher b, number of
+         *  alternatives a, position p, and ???.
+         */
+        Description(const Brancher &b, unsigned int a, int p, int split)
+                : Choice(b, a), pos(p), split(split) {}
+
+        // Report size occupied
+        virtual size_t size(void) const {
+            return sizeof(Description);
+        }
+
+        // Archive the choice's information in e
+        virtual void archive(Archive &e) const {
+            Choice::archive(e);
+            // You must also archive the additional information
+            e << pos << split;
+        }
+    };
+
+public:
+    // Construct branching
+    IntervalBrancher(Home home,
+                     ViewArray <IntView> &x0, int w0[], double p0)
+            : Brancher(home), x(x0), w(w0), p(p0), start(0) {}
+
+    // Post branching
+    static void post(Home home, ViewArray <IntView> &x, int w[], double p) {
+        (void) new(home) IntervalBrancher(home, x, w, p);
+    }
+
+    // Copy constructor used during cloning of b
+    IntervalBrancher(Space &home, bool share, IntervalBrancher &b)
+            : Brancher(home, share, b), p(b.p), start(b.start) {
+        x.update(home, share, b.x);
+        w = home.alloc<int>(x.size());
+        for (int i = x.size(); i--;)
+            w[i] = b.w[i];
+    }
+
+    // Copy brancher
+    virtual Actor *copy(Space &home, bool share) {
+        return new(home) IntervalBrancher(home, share, *this);
+    }
+
+    // Check status of brancher, return true if alternatives left
+    virtual bool status(const Space &home) const {
+        for (int i = start; i < x.size(); ++i) {
+            /**
+             * If x already assigned there is no branching to do.
+             */
+            if (!x[i].assigned()) {
+                /**
+                 * If x-range has space for a obligatory part of size p*size then we can branch.
+                 */
+                if (x[i].min() + w[i] - p * w[i] < x[i].max()) {
+                    start = i; //update variable we are branching on
+                    return true;
+                }
+            }
+        }
+        return false; //no more branching possible
+    }
+
+    // Return choice as description
+    virtual const Choice *choice(Space &home) {
+        int obligatoryPartSize = p * w[start];
+        int obligatoryPartStart = x[start].min() + w[start] - obligatoryPartSize;
+        int noAlternatives = 2;
+        /**
+         * Binary branching such that first x-interval is [x.min(),  obligatoryPartStart)
+         * second x-interval will thus be [obligatoryPartStart,  x.max()]
+         * obligatoryPart is [obligatoryPartStart, obligatoryPartStart + obligatoryPartSize]
+         * start = current variable position we are branching on
+         */
+        return new Description(*this, noAlternatives, start, obligatoryPartStart);
+    }
+
+    // Construct choice from archive e
+    virtual const Choice *choice(const Space &, Archive &e) {
+        // Again, you have to take care of the additional information
+        int alternative, split;
+        e >> alternative >> split;
+        return new Description(*this, alternative, p, split);
+    }
+
+    // Perform commit for choice c and alternative a
+    virtual ExecStatus commit(Space &home, const Choice &c, unsigned int a) {
+        const Description &d = static_cast<const Description &>(c);
+        /**
+         * First alternative interval [x.min - split)
+         */
+        if (a == 0) {
+            GECODE_ME_CHECK(x[start].le(home, d.split));
+        }
+        /**
+         * Second alternative interval [split - x.max]
+         */
+        if (a == 1) {
+            GECODE_ME_CHECK(x[start].gq(home, d.split));
+        }
+        return ES_OK;
+    }
+
+    // Print some information on stream o (used by Gist, from Gecode 4.0.1 on)
+    virtual void print(const Space &home, const Choice &c, unsigned int b,
+                       std::ostream &o) const {
+
+        const Description &d = static_cast<const Description &>(c);
+
+        if (b == 0) {
+            o << "First branch-alternative" << std::endl;
+            o << "x[" << d.pos << "]" << "| interval: [" << x[d.pos].min() << "," << d.split << ")";
+        }
+        if (b == 1) {
+            o << "Second branch-alternative" << std::endl;
+            o << "x[" << d.pos << "]" << "| interval: [" << d.split << "," << x[d.pos].max() << "]";
+        }
+
+    }
+};
+
+// This posts the interval branching
+void interval(Home home, const IntVarArgs &x, const IntArgs &w, double p) {
+    // Check whether arguments make sense
+    if (x.size() != w.size())
+        throw ArgumentSizeMismatch("interval");
+    // Never post a branching in a failed space
+    if (home.failed()) return;
+    // Create an array of integer views
+    ViewArray <IntView> vx(home, x);
+    // Create an array of integers
+    int *wc = static_cast<Space &>(home).alloc<int>(x.size());
+    for (int i = x.size(); i--;)
+        wc[i] = w[i];
+    // Post the brancher
+    IntervalBrancher::post(home, vx, wc, p);
+}
+
 
 #include <gecode/int.hh>
 
@@ -12,16 +181,16 @@ using namespace Gecode::Int;
 class NoOverlap : public Propagator {
 protected:
     // The x-coordinates
-    ViewArray<IntView> x;
+    ViewArray <IntView> x;
     // The width (array)
     int *w;
     // The y-coordinates
-    ViewArray<IntView> y;
+    ViewArray <IntView> y;
     // The heights (array)
     int *h;
 public:
     // Create propagator and initialize
-    NoOverlap(Home home, ViewArray<IntView> &x0, int w0[], ViewArray<IntView> &y0, int h0[]) :
+    NoOverlap(Home home, ViewArray <IntView> &x0, int w0[], ViewArray <IntView> &y0, int h0[]) :
     //Initialize variables
             Propagator(home),
             x(x0),
@@ -35,7 +204,7 @@ public:
 
     // Post no-overlap propagator. Post function decides whether propagation is necessary and then creates the propagator
     // if needed
-    static ExecStatus post(Home home, ViewArray<IntView> &x, int w[], ViewArray<IntView> &y, int h[]) {
+    static ExecStatus post(Home home, ViewArray <IntView> &x, int w[], ViewArray <IntView> &y, int h[]) {
         // Only if there is something to propagate
         if (x.size() > 1)
             (void) new(home) NoOverlap(home, x, w, y, h);
@@ -145,7 +314,8 @@ public:
         }
 
         if (!canOverlap)
-            return home.ES_SUBSUMED(*this); //No variable domains can overlap no matter assignment, no more propagation necessary
+            return home.ES_SUBSUMED(
+                    *this); //No variable domains can overlap no matter assignment, no more propagation necessary
 
         if (assigned == y.size())
             return home.ES_SUBSUMED(*this); //All variables assigned, no more propagation necessary.
@@ -181,8 +351,8 @@ void nooverlap(Space &home,
     // Never post a propagator in a failed space
     if (home.failed()) return;
     // Set up array of views for the coordinates
-    ViewArray<IntView> vx(home, x);
-    ViewArray<IntView> vy(home, y);
+    ViewArray <IntView> vx(home, x);
+    ViewArray <IntView> vy(home, y);
     // Set up arrays (allocated in home) for width and height and initialize
     int *wc = static_cast<Space &>(home).alloc<int>(x.size());
     int *hc = static_cast<Space &>(home).alloc<int>(y.size());
@@ -201,22 +371,53 @@ void nooverlap(Space &home,
 
 using namespace Gecode;
 
+
+/**
+ * ObligatoryPartSizeOptions for choosing how large the obligatory part in interval-branching should be in percentage.
+ */
+class ObligatoryPartSizeOptions : public Options {
+private:
+    Driver::DoubleOption _obligatory;
+    Driver::UnsignedIntOption _dimension;
+public :
+    ObligatoryPartSizeOptions(const char *e) :
+            Options(e),
+            _obligatory("-obligatory", "Obligatory part size in percentage 0.0-1.0", 0.35),
+            _dimension("-dimension", "Square dimension integer > 1", 2){
+        add(_obligatory);
+        add(_dimension);
+    }
+
+    void parse(int &argc, char *argv[]) {
+        Options::parse(argc, argv);
+    }
+
+    double obligatory(void) const {
+        return _obligatory.value();
+    }
+
+    int dimension(void) const {
+        return _dimension.value();
+    }
+};
+
 class SquarePacking : public Script {
 
 public:
     const int n;
+    const double p;
     IntVar s;
     IntVarArray xCoords, yCoords;
 
-    SquarePacking(const SizeOptions &opt) :
+    SquarePacking(const ObligatoryPartSizeOptions &opt) :
             Script(opt),
-            n(opt.size()),
+            n(opt.dimension()),
+            p(opt.obligatory()),
             s(*this, nSquaresArea(), nSquaresStacked(
                     n)), //Problem decomposition, constraint min and max of s, s will be the first branching to enumerate subproblems.
             xCoords(*this, n - 1, 0, nSquaresStacked(n)),//min coordinate = (0,0) max = (s,s). exclude 1x1 square
             yCoords(*this, n - 1, 0, nSquaresStacked(n))//min coordinate = (0,0) max = (s,s). exclude 1x1 square
     {
-
         /**
          * Constraint on the origin coordinate of the squares.
          * Square must be within enclosing square (s x s) (>= 0) and must not
@@ -282,7 +483,16 @@ public:
          * Branching strategy
          */
         branch(*this, s, INT_VAL_MIN()); //Branch first on s
-        //Try larger squares first, larger squares have smaller domains, try small x,y coords first (left-to-right, bottom-to-top)
+        /**
+         * Avoid large search space of choosing individual values for the variables by first splitting the domain
+         * into intervals
+         */
+        interval(*this, xCoords, w, p);
+        interval(*this, yCoords, w, p);
+        /**
+         * Branch on individual values
+         * Try larger squares first, larger squares have smaller domains, try small x,y coords first (left-to-right, bottom-to-top)
+         */
         branch(*this, xCoords, INT_VAR_SIZE_MIN(), INT_VAL_MIN()); //Assign x-coords first
         branch(*this, yCoords, INT_VAR_SIZE_MIN(), INT_VAL_MIN()); //Assign y-coords second
     }
@@ -360,7 +570,7 @@ public:
     }
 
     /// Constructor for cloning
-    SquarePacking(bool share, SquarePacking &space) : Script(share, space), n(space.n) {
+    SquarePacking(bool share, SquarePacking &space) : Script(share, space), n(space.n), p(space.p) {
         s.update(*this, share, space.s);
         xCoords.update(*this, share, space.xCoords);
         yCoords.update(*this, share, space.yCoords);
@@ -376,7 +586,9 @@ public:
     virtual void print(std::ostream &os) const {
         os << "SquarePacking Solution: " << std::endl;
         os << "Enclosing square size: " << s << "x" << s << std::endl;
-        os << "Square coordinates (different square 1 soliutions are excluded since it can be placed anywhere (almost)):" << std::endl;
+        os
+                << "Square coordinates (different square 1 soliutions are excluded since it can be placed anywhere (almost)):"
+                << std::endl;
         for (int i = 0; i < n - 1; ++i) {
             os << "square" << i + 2 << ": (" << xCoords[i] << "," << yCoords[i] << ") ";
         }
@@ -393,13 +605,16 @@ public:
  */
 int main(int argc, char *argv[]) {
 
+    // commandline options
+    ObligatoryPartSizeOptions opt("SquarePacking");
+
     //Commandline options
-    SizeOptions opt("SquarePacking");
+    //SizeOptions opt("SquarePacking");
 
     //Default options
     opt.solutions(0);//0 means find all solutions.
     opt.iterations(100); //how many iterations before measuring runtime
-    opt.size(10); //n size
+    //opt.size(10); //n size
     opt.mode(ScriptMode::SM_SOLUTION); //Solution mode (i.e no GIST) is default
     opt.ipl(IPL_DEF); //Default propagation strength
     opt.parse(argc, argv);
@@ -409,17 +624,15 @@ int main(int argc, char *argv[]) {
     opt.parse(argc, argv);
 
     //run script with DFS engine
-    Script::run<SquarePacking, DFS, SizeOptions>(opt);
+    Script::run<SquarePacking, DFS, ObligatoryPartSizeOptions>(opt);
 
     /**
      * Example cmd to solve:
-     * ./bin/square_packing -mode gist -ipl dom -solutions 1 3
-     * ./bin/square_packing -mode solution -ipl speed -solutions 0 3
-     * ./bin/square_packing -mode time -ipl def -solutions 0 3
-     * ./bin/square_packing -mode stat -ipl memory -solutions 0 3
+     * ./bin/square_packing_with_overlap_and_interval -mode gist -ipl dom -solutions 1 -dimension 3 -obligatory 0.35
+     * ./bin/square_packing_with_overlap_and_interval -mode solution -ipl speed -solutions 0 -dimension 3 -obligatory 0.35
+     * ./bin/square_packing_with_overlap_and_interval -mode time -ipl def -solutions 0 -dimension 3 -obligatory 0.35
+     * ./bin/square_packing_with_overlap_and_interval -mode stat -ipl memory -solutions 0 -dimension 3 -obligatory 0.35
      *
-     * or with default (4, solution, def, 1):
-     * ./bin/square_packing 3
      */
     return 0;
 }

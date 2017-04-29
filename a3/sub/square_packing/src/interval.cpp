@@ -52,13 +52,14 @@ protected:
     public:
         // Position of view
         int pos;
+        int split;
         // You might need more information, please add here
 
         /* Initialize description for brancher b, number of
          *  alternatives a, position p, and ???.
          */
-        Description(const Brancher &b, unsigned int a, int p)
-                : Choice(b, a), pos(p) {}
+        Description(const Brancher &b, unsigned int a, int p, int split)
+                : Choice(b, a), pos(p), split(split) {}
 
         // Report size occupied
         virtual size_t size(void) const {
@@ -69,7 +70,7 @@ protected:
         virtual void archive(Archive &e) const {
             Choice::archive(e);
             // You must also archive the additional information
-            e << pos << ...;
+            e << pos << split;
         }
     };
 
@@ -100,41 +101,74 @@ public:
 
     // Check status of brancher, return true if alternatives left
     virtual bool status(const Space &home) const {
-
-        // FILL IN HERE
-
+        for (int i = start; i < x.size(); ++i) {
+            if(!x[i].assigned()){
+                /**
+                 * If x-range has space for a obligatory part of size p*size then we can branch.
+                 */
+                if(x[i].min() + w[i] - p* w[i] < x[i].max()){
+                    start = i; //update variable we are branching on
+                    return true;
+                }
+            }
+            return false; //no more branching possible
+        }
     }
 
     // Return choice as description
     virtual const Choice *choice(Space &home) {
-
-        // FILL IN HERE
-
+        int obligatoryPartSize = p*w[start];
+        int obligatoryPartStart = x[start].min() + w[start]-obligatoryPartSize;
+        int noAlternatives = 2;
+        /**
+         * Binary branching such that first x-interval is [x.min(),  obligatoryPartStart)
+         * second x-interval will thus be [obligatoryPartStart,  x.max()]
+         * obligatoryPart is [obligatoryPartStart, obligatoryPartStart + obligatoryPartSize]
+         * start = current variable position we are branching on
+         */
+        return new Description(*this, noAlternatives, start, obligatoryPartStart);
     }
 
     // Construct choice from archive e
     virtual const Choice *choice(const Space &, Archive &e) {
         // Again, you have to take care of the additional information
-        int pos, ...;
-        e >> pos >> ...;
-        return new Description(*this, pos, ...);
+        int alternative, split;
+        e >> alternative >> split;
+        return new Description(*this, alternative, p, split);
     }
 
     // Perform commit for choice c and alternative a
-    virtual ExecStatus commit(Space &home,
-                              const Choice &c,
-                              unsigned int a) {
+    virtual ExecStatus commit(Space &home, const Choice &c, unsigned int a) {
         const Description &d = static_cast<const Description &>(c);
-
-        // FILL IN HERE
-
+        /**
+         * First alternative interval [x.min - split)
+         */
+        if(a == 0){
+            GECODE_ME_CHECK(x[start].le(*this, d.split));
+        }
+        /**
+         * Second alternative interval [split - x.max]
+         */
+        if(a == 1) {
+            GECODE_ME_CHECK(x[start].gq(*this, d.split));
+        }
+        return ES_OK;
     }
 
     // Print some information on stream o (used by Gist, from Gecode 4.0.1 on)
     virtual void print(const Space &home, const Choice &c, unsigned int b,
                        std::ostream &o) const {
 
-        // FILL IN HERE
+        const Description &d = static_cast<const Description &>(c);
+
+        if(b == 0){
+            o << "First branch-alternative" << std::endl;
+            o << "x[" << d.pos << "]" << "| interval: [" << x[pos].min() << "," << d.split << ")";
+        }
+        if(b == 1){
+            o << "Second branch-alternative" << std::endl;
+            o << "x[" << d.pos << "]" << "| interval: [" << d.split << "," << x[pos].max() << "]";
+        }
 
     }
 };
