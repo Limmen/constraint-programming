@@ -34,8 +34,8 @@ public:
         rel(*this, sum(cellsMatrix.col(0)) == 0);
         rel(*this, sum(cellsMatrix.col(1)) == 0);
 
-        for (int i = 1; i < n+3; ++i) {
-            for (int j = 1; j < n+3; ++j) {
+        for (int i = 2; i < n+2; ++i) {
+            for (int j = 2; j < n+2; ++j) {
                 BoolVarArgs neighborCells;
                 neighborCells << cellsMatrix(i, j - 1);
                 neighborCells << cellsMatrix(i, j + 1);
