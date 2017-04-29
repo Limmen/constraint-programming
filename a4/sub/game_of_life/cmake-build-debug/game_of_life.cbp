@@ -84,9 +84,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/kim/workspace/gecode/constraint_programming_gecode/a4/sub/game_of_life/main.cpp">
-			<Option target="game_of_life"/>
-		</Unit>
 		<Unit filename="/home/kim/workspace/gecode/constraint_programming_gecode/a4/sub/game_of_life/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

@@ -13,31 +13,87 @@ class Life : public Script {
 
 public:
 
+    const int n;
+    BoolVarArray cells;
+
     Life(const SizeOptions &opt) :
-            Script(opt) {
+            Script(opt),
+            n(opt.size()),
+            cells(*this, (n + 4) * (n + 4), 0, 1) {
+        Matrix <BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
+
+        /**
+         * Ensure pattern does not spread. Constraints on the border
+         */
+        rel(*this, sum(cellsMatrix.row(n + 2)) == 0);
+        rel(*this, sum(cellsMatrix.row(n + 3)) == 0);
+        rel(*this, sum(cellsMatrix.row(0)) == 0);
+        rel(*this, sum(cellsMatrix.row(1)) == 0);
+        rel(*this, sum(cellsMatrix.col(n + 2)) == 0);
+        rel(*this, sum(cellsMatrix.col(n + 3)) == 0);
+        rel(*this, sum(cellsMatrix.col(0)) == 0);
+        rel(*this, sum(cellsMatrix.col(1)) == 0);
+
+        for (int i = 1; i < n+3; ++i) {
+            for (int j = 1; j < n+3; ++j) {
+                BoolVarArgs neighborCells;
+                neighborCells << cellsMatrix(i, j - 1);
+                neighborCells << cellsMatrix(i, j + 1);
+                neighborCells << cellsMatrix(i - 1, j);
+                neighborCells << cellsMatrix(i - 1, j-1);
+                neighborCells << cellsMatrix(i - 1, j+1);
+                neighborCells << cellsMatrix(i + 1, j);
+                neighborCells << cellsMatrix(i + 1, j-1);
+                neighborCells << cellsMatrix(i + 1, j+1);
+                /*
+                 * live cell with < 2 live neighbors dies
+                 * live cell with > 3 live neighbors dies
+                 * dead cell with 3 live neighbors becomes live
+                 */
+                rel(*this, cellsMatrix(i, j) >> (sum(neighborCells) >= 2 && sum(neighborCells) <= 3));
+                rel(*this, !cellsMatrix(i, j) >> (sum(neighborCells) != 3));
+            }
+        }
         /**
          * Branching strategy
          */
-        //branch(*this, s, INT_VAL_MIN()); //Branch first on s
-        //Try larger squares first, larger squares have smaller domains, try small x,y coords first (left-to-right, bottom-to-top)
-        //branch(*this, xCoords, INT_VAR_SIZE_MIN(), INT_VAL_MIN()); //Assign x-coords first
-        //branch(*this, yCoords, INT_VAR_SIZE_MIN(), INT_VAL_MIN()); //Assign y-coords second
+        branch(*this, cells, INT_VAR_NONE(), INT_VAL_MAX());
     }
 
     /// Constructor for cloning
-    Life(bool share, Life &space) : Script(share, space){
-        //s.update(*this, share, space.s);
+    Life(bool share, Life &space) : Script(share, space), n(space.n) {
+        cells.update(*this, share, space.cells);
     }
 
     /// Perform copying during cloning
-    virtual Space *
-    copy(bool share) {
+    virtual Space *copy(bool share) {
         return new Life(share, *this);
     }
 
     /// Print solution
     virtual void print(std::ostream &os) const {
-        os << "Life Solution: " << std::endl;
+        int sum = 0;
+        os << "-----------------------------------------------" << std::endl;
+        Matrix <BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
+        os << "GOL Max Still-Life Pattern:" << std::endl;
+        for (int i = 2; i < n+2; ++i) {
+            for (int j = 2; j < n+2; ++j) {
+                os << " " << cellsMatrix(i,j);
+                sum = sum + cellsMatrix(i,j).val();
+            }
+            os << std::endl;
+        }
+        os << "Number of live cells:" << sum << std::endl;
+
+    }
+
+    /**
+     * Maximize the sum of values of the individual cells.
+     * @param space
+     */
+    virtual void constrain(const Space& space) {
+        const Life &home = static_cast<const Life&>(space);
+        rel(*this, sum(cells) > sum(home.cells));
     }
 };
 
@@ -63,8 +119,8 @@ int main(int argc, char *argv[]) {
     //parse cmd (potentially overwrite default options)
     opt.parse(argc, argv);
 
-    //run script with DFS engine
-    Script::run<Life, DFS, SizeOptions>(opt);
+    //run script with BAB engine
+    Script::run<Life, BAB, SizeOptions>(opt);
 
     /**
      * Example cmd to solve:
