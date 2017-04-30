@@ -15,54 +15,75 @@ public:
 
     const int n;
     BoolVarArray cells;
+    IntVarArray threeSquares;
 
     Life(const SizeOptions &opt) :
             Script(opt),
             n(opt.size()),
-            cells(*this, (n + 4) * (n + 4), 0, 1) {
-        Matrix <BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
+            cells(*this, (n + 4) * (n + 4), 0, 1),
+            threeSquares(*this, noThreeSquares(n), 0, 6) {
+
+        Matrix<BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
 
         /**
          * Ensure pattern does not spread. Constraints on the border
          */
-        rel(*this, sum(cellsMatrix.row(n + 2)) == 0);
-        rel(*this, sum(cellsMatrix.row(n + 3)) == 0);
-        rel(*this, sum(cellsMatrix.row(0)) == 0);
-        rel(*this, sum(cellsMatrix.row(1)) == 0);
-        rel(*this, sum(cellsMatrix.col(n + 2)) == 0);
-        rel(*this, sum(cellsMatrix.col(n + 3)) == 0);
-        rel(*this, sum(cellsMatrix.col(0)) == 0);
-        rel(*this, sum(cellsMatrix.col(1)) == 0);
+        rel(*this, cellsMatrix.row(n + 2), IRT_EQ, 0);
+        rel(*this, cellsMatrix.row(n + 3), IRT_EQ, 0);
+        rel(*this, cellsMatrix.row(0), IRT_EQ, 0);
+        rel(*this, cellsMatrix.row(1), IRT_EQ, 0);
+        rel(*this, cellsMatrix.col(n + 2), IRT_EQ, 0);
+        rel(*this, cellsMatrix.col(n + 3), IRT_EQ, 0);
+        rel(*this, cellsMatrix.col(0), IRT_EQ, 0);
+        rel(*this, cellsMatrix.col(1), IRT_EQ, 0);
 
-        for (int i = 2; i < n+2; ++i) {
-            for (int j = 2; j < n+2; ++j) {
+        /**
+         * Constraints to ensure pattern does not spread.
+         */
+        int squareNo = 0;
+        for (int i = 1; i < n + 3; ++i) {
+            for (int j = 1; j < n + 3; ++j) {
                 BoolVarArgs neighborCells;
                 neighborCells << cellsMatrix(i, j - 1);
                 neighborCells << cellsMatrix(i, j + 1);
                 neighborCells << cellsMatrix(i - 1, j);
-                neighborCells << cellsMatrix(i - 1, j-1);
-                neighborCells << cellsMatrix(i - 1, j+1);
+                neighborCells << cellsMatrix(i - 1, j - 1);
+                neighborCells << cellsMatrix(i - 1, j + 1);
                 neighborCells << cellsMatrix(i + 1, j);
-                neighborCells << cellsMatrix(i + 1, j-1);
-                neighborCells << cellsMatrix(i + 1, j+1);
+                neighborCells << cellsMatrix(i + 1, j - 1);
+                neighborCells << cellsMatrix(i + 1, j + 1);
                 /*
                  * live cell with < 2 live neighbors dies
                  * live cell with > 3 live neighbors dies
                  * dead cell with 3 live neighbors becomes live
                  */
-                rel(*this, cellsMatrix(i, j) >> (sum(neighborCells) >= 2 && sum(neighborCells) <= 3));
+                rel(*this, cellsMatrix(i, j) >> (sum(neighborCells) >= 2));
+                rel(*this, cellsMatrix(i, j) >> (sum(neighborCells) <= 3));
                 rel(*this, !cellsMatrix(i, j) >> (sum(neighborCells) != 3));
+
+                /**
+                 * Constrain 3x3 squares for optimization.
+                 */
+                if (i % 3 == 2 && j % 3 == 2 && i < n+2 && j < n+2) {
+                    rel(*this, threeSquares[squareNo] ==
+                               cellsMatrix(i, j) + cellsMatrix(i, j + 1) + cellsMatrix(i, j + 2) +
+                               cellsMatrix(i + 1, j) + cellsMatrix(i + 1, j + 1) + cellsMatrix(i + 1, j + 2) +
+                               cellsMatrix(i + 2, j) + cellsMatrix(i + 2, j + 1) + cellsMatrix(i + 2, j + 2));
+                    squareNo++;
+                }
             }
         }
         /**
          * Branching strategy
          */
-        branch(*this, cells, INT_VAR_NONE(), INT_VAL_MAX());
+        branch(*this, cells, INT_VAR_SIZE_MAX(), INT_VAL_MAX());
+        //branch(*this, cells, INT_VAR_SIZE_MIN(), INT_VAL_MIN());
     }
 
     /// Constructor for cloning
     Life(bool share, Life &space) : Script(share, space), n(space.n) {
         cells.update(*this, share, space.cells);
+        threeSquares.update(*this, share, space.threeSquares);
     }
 
     /// Perform copying during cloning
@@ -74,25 +95,30 @@ public:
     virtual void print(std::ostream &os) const {
         int sum = 0;
         os << "-----------------------------------------------" << std::endl;
-        Matrix <BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
+        Matrix<BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
         os << "GOL Max Still-Life Pattern:" << std::endl;
-        for (int i = 2; i < n+2; ++i) {
-            for (int j = 2; j < n+2; ++j) {
-                os << " " << cellsMatrix(i,j);
-                sum = sum + cellsMatrix(i,j).val();
+        for (int i = 2; i < n + 2; ++i) {
+            for (int j = 2; j < n + 2; ++j) {
+                os << " " << cellsMatrix(i, j);
+                sum = sum + cellsMatrix(i, j).val();
             }
             os << std::endl;
         }
         os << "Number of live cells:" << sum << std::endl;
+    }
 
+    int noThreeSquares(int n){
+        return ceil(n/3.0)*ceil(n/3.0);
     }
 
     /**
      * Maximize the sum of values of the individual cells.
+     *
      * @param space
      */
-    virtual void constrain(const Space& space) {
-        const Life &home = static_cast<const Life&>(space);
+    virtual void constrain(const Space &space) {
+        const Life &home = static_cast<const Life &>(space);
+        rel(*this, sum(threeSquares) > sum(home.threeSquares));
         rel(*this, sum(cells) > sum(home.cells));
     }
 };

@@ -1,0 +1,60 @@
+kim@limmen ~/w/g/c/a/s/game_of_life> ./bin/life 8
+Life
+-----------------------------------------------
+GOL Max Still-Life Pattern:
+ 1 1 0 1 1 0 0 0
+ 1 1 0 1 0 1 0 0
+ 0 0 0 1 0 0 1 0
+ 1 1 0 1 1 0 1 0
+ 1 1 0 1 0 0 1 1
+ 0 0 0 1 0 1 0 0
+ 1 1 0 1 0 1 0 0
+ 1 1 0 1 1 0 0 0
+Number of live cells:30
+-----------------------------------------------
+GOL Max Still-Life Pattern:
+ 1 1 0 1 1 0 1 0
+ 1 1 0 1 0 1 1 0
+ 0 0 0 1 0 0 0 0
+ 1 1 0 1 0 1 1 0
+ 1 1 0 1 0 1 1 0
+ 0 0 0 1 0 0 0 0
+ 1 1 0 1 0 1 1 0
+ 1 1 0 1 1 0 1 0
+Number of live cells:32
+-----------------------------------------------
+GOL Max Still-Life Pattern:
+ 1 1 0 1 1 0 1 1
+ 1 1 0 1 0 0 0 1
+ 0 0 0 1 0 1 1 0
+ 1 1 0 1 0 1 0 0
+ 1 1 0 1 0 1 0 0
+ 0 0 0 1 0 1 1 0
+ 1 1 0 1 0 0 0 1
+ 1 1 0 1 1 0 1 1
+Number of live cells:34
+-----------------------------------------------
+GOL Max Still-Life Pattern:
+ 1 1 0 1 1 0 1 1
+ 1 1 0 1 1 0 1 1
+ 0 0 0 0 0 0 0 0
+ 1 1 0 1 1 0 1 1
+ 1 1 0 1 1 0 1 1
+ 0 0 0 0 0 0 0 0
+ 1 1 0 1 1 0 1 1
+ 1 1 0 1 1 0 1 1
+Number of live cells:36
+
+Initial
+        propagators: 450
+        branchers:   1
+
+Summary
+        runtime:      24.794 (24794.404 ms)
+        solutions:    4
+        propagations: 44887473
+        nodes:        1588443
+        failures:     794218
+        restarts:     0
+        no-goods:     0
+        peak depth:   34
