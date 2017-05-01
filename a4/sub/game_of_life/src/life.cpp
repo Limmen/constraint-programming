@@ -63,8 +63,9 @@ public:
 
                 /**
                  * Constrain 3x3 squares for optimization.
+                 * Border of size 2 implies first 3x3 square bottom-left corner is at (2, 2), second one is at (5, 2), ... etc.
                  */
-                if (i % 3 == 2 && j % 3 == 2 && i < n+2 && j < n+2) {
+                if (j % 3 == 2 && i % 3 == 2 && j < n+2 && i < n+2) {
                     rel(*this, threeSquares[squareNo] ==
                                cellsMatrix(i, j) + cellsMatrix(i, j + 1) + cellsMatrix(i, j + 2) +
                                cellsMatrix(i + 1, j) + cellsMatrix(i + 1, j + 1) + cellsMatrix(i + 1, j + 2) +

@@ -587,7 +587,7 @@ public:
         os << "SquarePacking Solution: " << std::endl;
         os << "Enclosing square size: " << s << "x" << s << std::endl;
         os
-                << "Square coordinates (different square 1 soliutions are excluded since it can be placed anywhere (almost)):"
+                << "Square coordinates (different square 1 solutions are excluded since it can be placed anywhere (almost)):"
                 << std::endl;
         for (int i = 0; i < n - 1; ++i) {
             os << "square" << i + 2 << ": (" << xCoords[i] << "," << yCoords[i] << ") ";
