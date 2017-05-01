@@ -590,7 +590,7 @@ public:
                 << "Square coordinates (different square 1 solutions are excluded since it can be placed anywhere (almost)):"
                 << std::endl;
         for (int i = 0; i < n - 1; ++i) {
-            os << "square" << i + 2 << ": (" << xCoords[i] << "," << yCoords[i] << ") ";
+            os << "square" << n - i << ": (" << xCoords[i] << "," << yCoords[i] << ") ";
         }
         os << std::endl;
 
