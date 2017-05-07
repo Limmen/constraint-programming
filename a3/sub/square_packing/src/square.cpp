@@ -1,8 +1,7 @@
 //Created By Mallu 2017-05-03
-
 #include <gecode/int.hh>
 #include <gecode/driver.hh>
-#include <gecode/minimodel.hh>
+#include <gecode/minimodel.hh> //rel
 
 using namespace Gecode;
 
@@ -105,18 +104,6 @@ public:
         } else if (n >= 18 && n <= 21) {
             rel(*this, xCor[0], IRT_LE, 6);
             rel(*this, yCor[0], IRT_LE, 6);
-        } else if (n >= 22 && n <= 29) {
-            rel(*this, xCor[0], IRT_LE, 7);
-            rel(*this, yCor[0], IRT_LE, 7);
-        } else if (n >= 30 && n <= 34) {
-            rel(*this, xCor[0], IRT_LE, 8);
-            rel(*this, yCor[0], IRT_LE, 8);
-        } else if (n >= 35 && n <= 44) {
-            rel(*this, xCor[0], IRT_LE, 9);
-            rel(*this, yCor[0], IRT_LE, 9);
-        } else if (n == 45) {
-            rel(*this, xCor[0], IRT_LE, 10);
-            rel(*this, yCor[0], IRT_LE, 10);
         }
             
        //task 5 branching start from 
@@ -166,7 +153,7 @@ int main(int argc, char* argv[]) {
     opt.size(N);
     n = opt.size();
     opt.parse(argc,argv);
-    Script::run<Square,DFS,SizeOptions>(opt);
+    Script::run<Square,BAB,SizeOptions>(opt);
     return 0;
 }
 
