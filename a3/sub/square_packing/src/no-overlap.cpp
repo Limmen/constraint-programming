@@ -26,6 +26,7 @@
  *
  */
 
+
 #include <gecode/int.hh>
 
 using namespace Gecode;
@@ -35,16 +36,16 @@ using namespace Gecode::Int;
 class NoOverlap : public Propagator {
 protected:
     // The x-coordinates
-    ViewArray <IntView> x;
+    ViewArray<IntView> x;
     // The width (array)
     int *w;
     // The y-coordinates
-    ViewArray <IntView> y;
+    ViewArray<IntView> y;
     // The heights (array)
     int *h;
 public:
     // Create propagator and initialize
-    NoOverlap(Home home, ViewArray <IntView> &x0, int w0[], ViewArray <IntView> &y0, int h0[]) :
+    NoOverlap(Home home, ViewArray<IntView> &x0, int w0[], ViewArray<IntView> &y0, int h0[]) :
     //Initialize variables
             Propagator(home),
             x(x0),
@@ -58,7 +59,7 @@ public:
 
     // Post no-overlap propagator. Post function decides whether propagation is necessary and then creates the propagator
     // if needed
-    static ExecStatus post(Home home, ViewArray <IntView> &x, int w[], ViewArray <IntView> &y, int h[]) {
+    static ExecStatus post(Home home, ViewArray<IntView> &x, int w[], ViewArray<IntView> &y, int h[]) {
         // Only if there is something to propagate
         if (x.size() > 1)
             (void) new(home) NoOverlap(home, x, w, y, h);
@@ -106,7 +107,7 @@ public:
                 assigned++;
             for (int j = 0; j < x.size(); ++j) {
                 if (j != i) {
-                    //square i and j overlaps on x-axis so propagate that they cant overlap on y-axis
+                    //square i and j overlaps on x-axis so propagate (bounds propagation) that they cant overlap on y-axis
                     if
                             (
                             (x[i].max() <= x[j].min() && x[i].min() + w[i] > x[j].max()) ||
@@ -124,7 +125,7 @@ public:
                         if (y[j].min() + h[j] > y[i].max())
                             GECODE_ME_CHECK(y[j].gr(home, y[i].min()));
                     }
-                    //square i and j overlaps on y-axis so propagate that they cant overlap on x-axis
+                    //square i and j overlaps on y-axis so propagate (bounds propagation) that they cant overlap on x-axis
                     if
                             (
                             (y[i].max() <= y[j].min() && y[i].min() + h[i] > y[j].max()) ||
@@ -145,6 +146,7 @@ public:
                     if (!xCanOverlap)
                         xCanOverlap =
                                 //!(Condition where x_i and x_j can never overlap)
+                                //I.e if x_i and x_j can never overlap, xCanOverlap = false
                                 !(
                                         ((x[i].min() > x[j].max()) || (x[i].max() + w[i] <= x[j].min()))
                                         &&
@@ -155,6 +157,7 @@ public:
                     if (!yCanOverlap)
                         yCanOverlap =
                                 //!(Condition where y_i and y_j can never overlap)
+                                //I.e if y_i and y_j can never overlap, yCanOverlap = false
                                 !(
                                         ((y[i].min() > y[j].max()) || (y[i].max() + h[i] <= y[j].min()))
                                         &&
@@ -163,13 +166,12 @@ public:
                                 );
                 }
             }
-            if (!canOverlap)
+            if (!canOverlap)//If no previous squares could overlap, update the bool by checking if these 2 squares can overlap.
                 canOverlap = xCanOverlap && yCanOverlap;
         }
-        /*
         if (!canOverlap)
             return home.ES_SUBSUMED(*this); //No variable domains can overlap no matter assignment, no more propagation necessary
-            */
+
         if (assigned == y.size())
             return home.ES_SUBSUMED(*this); //All variables assigned, no more propagation necessary.
         return ES_NOFIX; //Propagator is not idempotent, max and min bounds might change and affect propagation.
@@ -204,8 +206,8 @@ void nooverlap(Space &home,
     // Never post a propagator in a failed space
     if (home.failed()) return;
     // Set up array of views for the coordinates
-    ViewArray <IntView> vx(home, x);
-    ViewArray <IntView> vy(home, y);
+    ViewArray<IntView> vx(home, x);
+    ViewArray<IntView> vy(home, y);
     // Set up arrays (allocated in home) for width and height and initialize
     int *wc = static_cast<Space &>(home).alloc<int>(x.size());
     int *hc = static_cast<Space &>(home).alloc<int>(y.size());

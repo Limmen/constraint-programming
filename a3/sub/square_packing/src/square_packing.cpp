@@ -19,8 +19,7 @@ public:
     SquarePacking(const SizeOptions &opt) :
             Script(opt),
             n(opt.size()),
-            s(*this, nSquaresArea(), nSquaresStacked(
-                    n)), //Problem decomposition, constraint min and max of s, s will be the first branching to enumerate subproblems.
+            s(*this, nSquaresArea(), nSquaresStacked(n)), //Problem decomposition, constraint min and max of s, s will be the first branching to enumerate subproblems.
             xCoords(*this, n - 1, 0, nSquaresStacked(n)),//min coordinate = (0,0) max = (s,s). exclude 1x1 square
             yCoords(*this, n - 1, 0, nSquaresStacked(n))//min coordinate = (0,0) max = (s,s). exclude 1x1 square
     {
@@ -53,9 +52,8 @@ public:
                     /**
                      * If x-axis overlap then y-axis can not overlap and vice versa.
                      */
-
-                    rel(*this, (xOverlap >> !yOverlap), opt.ipl());
-                    rel(*this, (yOverlap >> !xOverlap), opt.ipl());
+                    rel(*this, (xOverlap >> !yOverlap), opt.ipl()); //Utilize minimodel, Gecode will post this as reified integer relation constraints (ref: MPG)
+                    rel(*this, (yOverlap >> !xOverlap), opt.ipl()); //Utilize minimodel, Gecode will post this as reified integer relation constraints (ref: MPG)
                 }
             }
         }
@@ -95,7 +93,6 @@ public:
         /**
          * Symmetry breaking. Restrict placement of the largest inside-square (n x n)
          */
-
         rel(*this, xCoords[0] <= 1 + (s - n) / 2);
         rel(*this, yCoords[0] <= xCoords[0]);
 
@@ -138,7 +135,7 @@ public:
     }
 
     /**
-     * Get the area to fit the n squares tacked on top of each other, i.e an upper bound on the size of s.
+     * Get the area to fit the n squares stacked on top of each other, i.e an upper bound on the size of s.
      *
      * @return
      */
@@ -248,13 +245,7 @@ int main(int argc, char *argv[]) {
 
     /**
      * Example cmd to solve:
-     * ./bin/square_packing -mode gist -ipl dom -solutions 1 3
-     * ./bin/square_packing -mode solution -ipl speed -solutions 0 3
-     * ./bin/square_packing -mode time -ipl def -solutions 0 3
-     * ./bin/square_packing -mode stat -ipl memory -solutions 0 3
-     *
-     * or with default (4, solution, def, 1):
-     * ./bin/square_packing 3
+     * ./bin/square_packing -solutions 1 15
      */
     return 0;
 }

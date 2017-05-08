@@ -83,7 +83,7 @@ public:
                 assigned++;
             for (int j = 0; j < x.size(); ++j) {
                 if (j != i) {
-                    //square i and j overlaps on x-axis so propagate that they cant overlap on y-axis
+                    //square i and j overlaps on x-axis so propagate (bounds propagation) that they cant overlap on y-axis
                     if
                             (
                             (x[i].max() <= x[j].min() && x[i].min() + w[i] > x[j].max()) ||
@@ -101,7 +101,7 @@ public:
                         if (y[j].min() + h[j] > y[i].max())
                             GECODE_ME_CHECK(y[j].gr(home, y[i].min()));
                     }
-                    //square i and j overlaps on y-axis so propagate that they cant overlap on x-axis
+                    //square i and j overlaps on y-axis so propagate (bounds propagation) that they cant overlap on x-axis
                     if
                             (
                             (y[i].max() <= y[j].min() && y[i].min() + h[i] > y[j].max()) ||
@@ -140,10 +140,9 @@ public:
                                 );
                 }
             }
-            if (!canOverlap)
+            if (!canOverlap)//If no previous squares could overlap, update the bool by checking if these 2 squares can overlap.
                 canOverlap = xCanOverlap && yCanOverlap;
         }
-
         if (!canOverlap)
             return home.ES_SUBSUMED(*this); //No variable domains can overlap no matter assignment, no more propagation necessary
 
@@ -211,8 +210,7 @@ public:
     SquarePacking(const SizeOptions &opt) :
             Script(opt),
             n(opt.size()),
-            s(*this, nSquaresArea(), nSquaresStacked(
-                    n)), //Problem decomposition, constraint min and max of s, s will be the first branching to enumerate subproblems.
+            s(*this, nSquaresArea(), nSquaresStacked(n)), //Problem decomposition, constraint min and max of s, s will be the first branching to enumerate subproblems.
             xCoords(*this, n - 1, 0, nSquaresStacked(n)),//min coordinate = (0,0) max = (s,s). exclude 1x1 square
             yCoords(*this, n - 1, 0, nSquaresStacked(n))//min coordinate = (0,0) max = (s,s). exclude 1x1 square
     {
@@ -305,7 +303,7 @@ public:
     }
 
     /**
-     * Get the area to fit the n squares tacked on top of each other, i.e an upper bound on the size of s.
+     * Get the area to fit the n squares stacked on top of each other, i.e an upper bound on the size of s.
      *
      * @return
      */

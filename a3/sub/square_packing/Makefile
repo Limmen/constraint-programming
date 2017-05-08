@@ -14,10 +14,13 @@ CFLAGS=-c -Wall -std=c++11
 GECODEFLAGS=-lgecodeflatzinc -lgecodedriver -lgecodegist -lgecodesearch -lgecodeminimodel -lgecodeset -gecodefloat -lgecodeint -lgecodekernel -lgecodesupport
 GECODE_LIB_LOCATION=-L/usr/local/lib
 
-all: square_packing square_packing_with_overlap square_packing_with_overlap_and_interval
+all: square_packing square_packing_with_overlap square_packing_with_overlap_and_interval square
 
 square_packing: $(OBJDIR)/square_packing.o
 	$(CC) -o $(BINDIR)/square_packing $(GECODE_LIB_LOCATION) $(OBJDIR)/square_packing.o $(GECODEFLAGS)
+
+square: $(OBJDIR)/square.o
+	$(CC) -o $(BINDIR)/square $(GECODE_LIB_LOCATION) $(OBJDIR)/square.o $(GECODEFLAGS)
 
 square_packing_with_overlap: $(OBJDIR)/square_packing_with_overlap.o
 	$(CC) -o $(BINDIR)/square_packing_with_overlap $(GECODE_LIB_LOCATION) $(OBJDIR)/square_packing_with_overlap.o $(GECODEFLAGS)
@@ -39,6 +42,9 @@ $(OBJDIR)/interval.o: $(SRCDIR)/interval.cpp
 
 $(OBJDIR)/square_packing_with_overlap_and_interval.o: $(SRCDIR)/square_packing_with_overlap_and_interval.cpp
 	$(CC) $(CFLAGS) $(SRCDIR)/square_packing_with_overlap_and_interval.cpp -o $(OBJDIR)/square_packing_with_overlap_and_interval.o
+
+$(OBJDIR)/square.o: $(SRCDIR)/square.cpp
+	$(CC) $(CFLAGS) $(SRCDIR)/square.cpp -o $(OBJDIR)/square.o
 
 .PHONY: clean
 
