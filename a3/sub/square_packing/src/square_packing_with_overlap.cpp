@@ -124,6 +124,7 @@ public:
                     if (!xCanOverlap)
                         xCanOverlap =
                                 //!(Condition where x_i and x_j can never overlap)
+                                //I.e if x_i and x_j can never overlap, xCanOverlap = false
                                 !(
                                         ((x[i].min() > x[j].max()) || (x[i].max() + w[i] <= x[j].min()))
                                         &&
@@ -134,6 +135,7 @@ public:
                     if (!yCanOverlap)
                         yCanOverlap =
                                 //!(Condition where y_i and y_j can never overlap)
+                                //I.e if y_i and y_j can never overlap, yCanOverlap = false
                                 !(
                                         ((y[i].min() > y[j].max()) || (y[i].max() + h[i] <= y[j].min()))
                                         &&
