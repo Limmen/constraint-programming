@@ -1,5 +1,14 @@
 //
 // square_packing.cpp
+// All required propagation-techniques are implemented:
+// - problem decomposition
+// - general coordinate constraint based on size of square
+// - disjoint/no-overlap constraint
+// - cumulative constraint with the reified dom-constraint
+// - symmetry breaking
+// - empty-strip dominance
+// - ignoring size-1 squares.
+// - branching on s first, assign x-coords first, try bigger squares first, left-to-right and top-to-bottom placement.
 // Created by Kim Hammar & Mallu Goswami on 2017-04-21.
 //
 
@@ -39,7 +48,6 @@ public:
         /**
          * Apply constraints on coordinates that squares should not overlap (disjoint)
          */
-
         //Comment out the loops below when running with nooverlap propagator
         for (int i = 0; i < n - 1; ++i) {
             for (int j = 0; j < n - 1; ++j) {
@@ -99,7 +107,6 @@ public:
         /**
          * Empty-strip dominance
          */
-
         int gapLim = n - 1 > 45 ? 45 : n - 1;
         for (int i = 2; i < gapLim; ++i) {
             rel(*this, xCoords[i] != gap_generic(i));

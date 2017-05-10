@@ -88,7 +88,8 @@ public:
                             (
                             (x[i].max() <= x[j].min() && x[i].min() + w[i] > x[j].max()) ||
                             (x[j].max() <= x[i].min() && x[j].min() + w[j] > x[i].max())
-                            ) {
+                            )
+                    {
                         if (y[i].max() <= y[j].min())
                             GECODE_ME_CHECK(y[j].gq(home, y[i].min() + h[i]));
 
@@ -106,7 +107,8 @@ public:
                             (
                             (y[i].max() <= y[j].min() && y[i].min() + h[i] > y[j].max()) ||
                             (y[j].max() <= y[i].min() && y[j].min() + h[j] > y[i].max())
-                            ) {
+                            )
+                    {
                         if (x[i].max() <= x[j].min())
                             GECODE_ME_CHECK(x[j].gq(home, x[i].min() + w[i]));
 
