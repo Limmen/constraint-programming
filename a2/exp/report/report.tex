@@ -57,7 +57,7 @@
 
 \begin{document}
 \noindent
-\large\textbf{Assignment 2} \hfill \textbf{Kim Hammar} \\
+\large\textbf{Assignment 2 - Extra non-submission tasks} \hfill \textbf{Kim Hammar} \\
 \normalsize ID2204 \hfill  \textbf{Mallu} \\
 Constraint Programming \hfill Due Date: 30 April 2017\\
 
@@ -144,8 +144,8 @@ Propagator $p \in \text{constraint } c \equiv x < y \land y < x$.
 \begin{gather*}
 p(s) = 
 \begin{cases}
-  x \mymapsto \{n \in s(x) | n \max s(y) \}\\
-  y \mymapsto \{n \in s(y) | n \max s(x) \}\\
+  x \mymapsto \{n \in s(x) | n < \max s(y) \}\\
+  y \mymapsto \{n \in s(y) | n < \max s(x) \}\\
 \end{cases}
 \end{gather*}
 

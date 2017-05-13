@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.4.16)  23 APR 2017 12:35
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.4.16)  12 MAY 2017 10:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -589,7 +589,7 @@ lmsy/m/n/10.95 ^^A \OML/lmm/m/it/10.95 x \OT1/lmr/m/n/10.95 + \OML/lmm/m/it/10.
  []
 
 
-Overfull \hbox (0.52539pt too wide) in paragraph at lines 82--83
+Overfull \hbox (0.52539pt too wide) in paragraph at lines 84--85
 []\T1/lmr/m/n/10.95 Assume by con-tra-dic-tion that $\OML/lmm/m/it/10.95 p[]$ \
 T1/lmr/m/n/10.95 is not idem-po-tent, then there ex-ists two stores $\OML/lmm/m
 /it/10.95 p[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 ) =
@@ -598,7 +598,7 @@ T1/lmr/m/n/10.95 is not idem-po-tent, then there ex-ists two stores $\OML/lmm/m
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Overfull \hbox (12.92693pt too wide) in paragraph at lines 148--149
+Overfull \hbox (12.92693pt too wide) in paragraph at lines 150--151
 \OML/lmm/m/it/10.95 p[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10
 .95 )$\T1/lmr/m/n/10.95 . I.e $\OML/lmm/m/it/10.95 p[]\OT1/lmr/m/n/10.95 (\OML/
 lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 )$ \T1/lmr/m/n/10.95 is strictly stronger th
@@ -611,20 +611,20 @@ n/10.95 ) \OMS/lmsy/m/n/10.95 ^^Z
  []
 
 (./report.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 174.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 176.
  [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 174.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 176.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 174.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 174.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 176.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 176.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 174.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 176.
  ) 
 Here is how much of TeX's memory you used:
  10075 strings out of 493304
  142277 string characters out of 6139871
- 338635 words of memory out of 5000000
+ 339635 words of memory out of 5000000
  13318 multiletter control sequences out of 15000+600000
  60395 words of font info for 47 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
@@ -640,7 +640,7 @@ ts/type1/public/lm/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb>
 public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/s
 hare/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (3 pages, 158758 bytes).
+Output written on report.pdf (3 pages, 159761 bytes).
 PDF statistics:
  91 PDF objects out of 1000 (max. 8388607)
  74 compressed objects within 1 object stream

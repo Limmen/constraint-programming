@@ -1,0 +1,1 @@
+/usr/bin/c++   -g   CMakeFiles/golomb_rulers.dir/main.cpp.o CMakeFiles/golomb_rulers.dir/src/golomb_rulers.cpp.o  -o golomb_rulers 

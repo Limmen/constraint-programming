@@ -67,8 +67,10 @@ Propagator $p_{lin} \in constraint \equiv a \cdot x + b \cdot y \leq c \quad \te
 \begin{gather*}
 p_{lin}(s) = 
 \begin{cases}
-  x \mymapsto \{n \in s(x) | n \leq \frac{c - (b \cdot \min s(y))}{a} \}\\
-  y \mymapsto \{n \in s(y) | n \leq \frac{c - (a \cdot \min s(x))}{b} \}\\
+  a > 0 \implies x \mymapsto \{n \in s(x) | n \leq \frac{c - (b \cdot \min s(y))}{a} \}\\
+  a < 0 \implies x \mymapsto \{n \in s(x) | n \geq \frac{c - (b \cdot \min s(y))}{a} \}\\
+  b > 0 \implies y \mymapsto \{n \in s(y) | n \leq \frac{c - (a \cdot \min s(x))}{b} \}\\
+  b < 0 \implies y \mymapsto \{n \in s(y) | n \geq \frac{c - (a \cdot \min s(x))}{b} \}\\
 \end{cases}
 \end{gather*}
 \subsection*{Idempotence}
