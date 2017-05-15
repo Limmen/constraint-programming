@@ -1,4 +1,4 @@
-kim@limmen ~/w/g/c/a/s/game_of_life> ./bin/life 9
+kim@limmen /h/w/g/c/a/s/game_of_life> ./bin/life 9
 Life
 -----------------------------------------------
 GOL Max Still-Life Pattern:
@@ -66,7 +66,7 @@ Initial
         branchers:   1
 
 Summary
-        runtime:      2:51.253 (171253.370 ms)
+        runtime:      1:09.216 (69216.596 ms)
         solutions:    5
         propagations: 303258149
         nodes:        8848341

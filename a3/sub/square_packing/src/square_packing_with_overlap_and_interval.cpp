@@ -3,7 +3,6 @@
 // Created by Kim Hammar & Mallu Goswami on 2017-05-01.
 //
 
-
 #include <gecode/int.hh>
 
 using namespace Gecode;
@@ -34,7 +33,7 @@ protected:
         // You might need more information, please add here
 
         /* Initialize description for brancher b, number of
-         *  alternatives a, position p, and ???.
+         *  alternatives a, position p, and split-mark.
          */
         Description(const Brancher &b, unsigned int a, int p, int split)
                 : Choice(b, a), pos(p), split(split) {}
@@ -85,9 +84,9 @@ public:
              */
             if (!x[i].assigned()) {
                 /**
-                 * If x-range has space for a obligatory part of size p*size then we can branch.
+                 * If x-range has space for an obligatory part of size p*size then we can branch.
                  */
-                if (x[i].min() + w[i] - p * w[i] < x[i].max()) {
+                if ((x[i].min() + w[i] - std::ceil(p * w[i])) < x[i].max()) {
                     start = i; //update variable we are branching on
                     return true;
                 }
@@ -98,16 +97,16 @@ public:
 
     // Return choice as description
     virtual const Choice *choice(Space &home) {
-        int obligatoryPartSize = p * w[start];
-        int obligatoryPartStart = x[start].min() + w[start] - obligatoryPartSize;
+        int obligatoryPartSize = std::ceil(p * w[start]);
+        int split = x[start].min() + w[start] - obligatoryPartSize;
         int noAlternatives = 2;
         /**
-         * Binary branching such that first x-interval is [x.min(),  obligatoryPartStart)
-         * second x-interval will thus be [obligatoryPartStart,  x.max()]
-         * obligatoryPart is [obligatoryPartStart, obligatoryPartStart + obligatoryPartSize]
+         * Binary branching such that first x-interval is [x.min(), split], which enforces obligatory part
+         * second x-interval will thus be (split,  x.max()]
+         * obligatoryPart is [x.min(), split ()]
          * start = current variable position we are branching on
          */
-        return new Description(*this, noAlternatives, start, obligatoryPartStart);
+        return new Description(*this, noAlternatives, start, split);
     }
 
     // Construct choice from archive e
@@ -122,16 +121,17 @@ public:
     virtual ExecStatus commit(Space &home, const Choice &c, unsigned int a) {
         const Description &d = static_cast<const Description &>(c);
         /**
-         * First alternative interval [x.min - split)
+         * First alternative, interval [x.min, split], enforces obligatory part to be p % of side size.
          */
         if (a == 0) {
-            GECODE_ME_CHECK(x[start].le(home, d.split));
+            GECODE_ME_CHECK(x[d.pos].lq(home, d.split));
         }
         /**
-         * Second alternative interval [split - x.max]
+         * Second alternative, interval (split - x.max], keep the values that is excluded by first branching
+         * to keep the branches disjunctive.
          */
         if (a == 1) {
-            GECODE_ME_CHECK(x[start].gq(home, d.split));
+            GECODE_ME_CHECK(x[d.pos].gr(home, d.split));
         }
         return ES_OK;
     }
@@ -144,11 +144,11 @@ public:
 
         if (b == 0) {
             o << "First branch-alternative" << std::endl;
-            o << "x[" << d.pos << "]" << "| interval: [" << x[d.pos].min() << "," << d.split << ")";
+            o << "x[" << d.pos << "]" << "| interval: [" << x[d.pos].min() << "," << d.split << "]";
         }
         if (b == 1) {
             o << "Second branch-alternative" << std::endl;
-            o << "x[" << d.pos << "]" << "| interval: [" << d.split << "," << x[d.pos].max() << "]";
+            o << "x[" << d.pos << "]" << "| interval: (" << d.split << "," << x[d.pos].max() << "]";
         }
 
     }
@@ -171,6 +171,10 @@ void interval(Home home, const IntVarArgs &x, const IntArgs &w, double p) {
     IntervalBrancher::post(home, vx, wc, p);
 }
 
+//
+// square_packing_with_overlap.cpp
+// Created by Kim Hammar & Mallu Goswami on 2017-04-21.
+//
 
 #include <gecode/int.hh>
 
@@ -181,16 +185,16 @@ using namespace Gecode::Int;
 class NoOverlap : public Propagator {
 protected:
     // The x-coordinates
-    ViewArray <IntView> x;
+    ViewArray<IntView> x;
     // The width (array)
     int *w;
     // The y-coordinates
-    ViewArray <IntView> y;
+    ViewArray<IntView> y;
     // The heights (array)
     int *h;
 public:
     // Create propagator and initialize
-    NoOverlap(Home home, ViewArray <IntView> &x0, int w0[], ViewArray <IntView> &y0, int h0[]) :
+    NoOverlap(Home home, ViewArray<IntView> &x0, int w0[], ViewArray<IntView> &y0, int h0[]) :
     //Initialize variables
             Propagator(home),
             x(x0),
@@ -204,7 +208,7 @@ public:
 
     // Post no-overlap propagator. Post function decides whether propagation is necessary and then creates the propagator
     // if needed
-    static ExecStatus post(Home home, ViewArray <IntView> &x, int w[], ViewArray <IntView> &y, int h[]) {
+    static ExecStatus post(Home home, ViewArray<IntView> &x, int w[], ViewArray<IntView> &y, int h[]) {
         // Only if there is something to propagate
         if (x.size() > 1)
             (void) new(home) NoOverlap(home, x, w, y, h);
@@ -252,12 +256,13 @@ public:
                 assigned++;
             for (int j = 0; j < x.size(); ++j) {
                 if (j != i) {
-                    //square i and j overlaps on x-axis so propagate that they cant overlap on y-axis
+                    //square i and j overlaps on x-axis so propagate (bounds propagation) that they cant overlap on y-axis
                     if
                             (
                             (x[i].max() <= x[j].min() && x[i].min() + w[i] > x[j].max()) ||
                             (x[j].max() <= x[i].min() && x[j].min() + w[j] > x[i].max())
-                            ) {
+                            )
+                    {
                         if (y[i].max() <= y[j].min())
                             GECODE_ME_CHECK(y[j].gq(home, y[i].min() + h[i]));
 
@@ -270,12 +275,13 @@ public:
                         if (y[j].min() + h[j] > y[i].max())
                             GECODE_ME_CHECK(y[j].gr(home, y[i].min()));
                     }
-                    //square i and j overlaps on y-axis so propagate that they cant overlap on x-axis
+                    //square i and j overlaps on y-axis so propagate (bounds propagation) that they cant overlap on x-axis
                     if
                             (
                             (y[i].max() <= y[j].min() && y[i].min() + h[i] > y[j].max()) ||
                             (y[j].max() <= y[i].min() && y[j].min() + h[j] > y[i].max())
-                            ) {
+                            )
+                    {
                         if (x[i].max() <= x[j].min())
                             GECODE_ME_CHECK(x[j].gq(home, x[i].min() + w[i]));
 
@@ -291,6 +297,7 @@ public:
                     if (!xCanOverlap)
                         xCanOverlap =
                                 //!(Condition where x_i and x_j can never overlap)
+                                //I.e if x_i and x_j can never overlap, xCanOverlap = false
                                 !(
                                         ((x[i].min() > x[j].max()) || (x[i].max() + w[i] <= x[j].min()))
                                         &&
@@ -301,6 +308,7 @@ public:
                     if (!yCanOverlap)
                         yCanOverlap =
                                 //!(Condition where y_i and y_j can never overlap)
+                                //I.e if y_i and y_j can never overlap, yCanOverlap = false
                                 !(
                                         ((y[i].min() > y[j].max()) || (y[i].max() + h[i] <= y[j].min()))
                                         &&
@@ -309,13 +317,11 @@ public:
                                 );
                 }
             }
-            if (!canOverlap)
+            if (!canOverlap)//If no previous squares could overlap, update the bool by checking if these 2 squares can overlap.
                 canOverlap = xCanOverlap && yCanOverlap;
         }
-
         if (!canOverlap)
-            return home.ES_SUBSUMED(
-                    *this); //No variable domains can overlap no matter assignment, no more propagation necessary
+            return home.ES_SUBSUMED(*this); //No variable domains can overlap no matter assignment, no more propagation necessary
 
         if (assigned == y.size())
             return home.ES_SUBSUMED(*this); //All variables assigned, no more propagation necessary.
@@ -351,8 +357,8 @@ void nooverlap(Space &home,
     // Never post a propagator in a failed space
     if (home.failed()) return;
     // Set up array of views for the coordinates
-    ViewArray <IntView> vx(home, x);
-    ViewArray <IntView> vy(home, y);
+    ViewArray<IntView> vx(home, x);
+    ViewArray<IntView> vy(home, y);
     // Set up arrays (allocated in home) for width and height and initialize
     int *wc = static_cast<Space &>(home).alloc<int>(x.size());
     int *hc = static_cast<Space &>(home).alloc<int>(y.size());
@@ -370,7 +376,6 @@ void nooverlap(Space &home,
 #include <gecode/minimodel.hh>
 
 using namespace Gecode;
-
 
 /**
  * ObligatoryPartSizeOptions for choosing how large the obligatory part in interval-branching should be in percentage.
@@ -413,11 +418,11 @@ public:
             Script(opt),
             n(opt.dimension()),
             p(opt.obligatory()),
-            s(*this, nSquaresArea(), nSquaresStacked(
-                    n)), //Problem decomposition, constraint min and max of s, s will be the first branching to enumerate subproblems.
+            s(*this, nSquaresArea(), nSquaresStacked(n)), //Problem decomposition, constraint min and max of s, s will be the first branching to enumerate subproblems.
             xCoords(*this, n - 1, 0, nSquaresStacked(n)),//min coordinate = (0,0) max = (s,s). exclude 1x1 square
             yCoords(*this, n - 1, 0, nSquaresStacked(n))//min coordinate = (0,0) max = (s,s). exclude 1x1 square
     {
+
         /**
          * Constraint on the origin coordinate of the squares.
          * Square must be within enclosing square (s x s) (>= 0) and must not
@@ -483,16 +488,11 @@ public:
          * Branching strategy
          */
         branch(*this, s, INT_VAL_MIN()); //Branch first on s
-        /**
-         * Avoid large search space of choosing individual values for the variables by first splitting the domain
-         * into intervals
-         */
+
         interval(*this, xCoords, w, p);
         interval(*this, yCoords, w, p);
-        /**
-         * Branch on individual values
-         * Try larger squares first, larger squares have smaller domains, try small x,y coords first (left-to-right, bottom-to-top)
-         */
+
+        //Try larger squares first, larger squares have smaller domains, try small x,y coords first (left-to-right, bottom-to-top)
         branch(*this, xCoords, INT_VAR_SIZE_MIN(), INT_VAL_MIN()); //Assign x-coords first
         branch(*this, yCoords, INT_VAR_SIZE_MIN(), INT_VAL_MIN()); //Assign y-coords second
     }
@@ -515,7 +515,7 @@ public:
     }
 
     /**
-     * Get the area to fit the n squares tacked on top of each other, i.e an upper bound on the size of s.
+     * Get the area to fit the n squares stacked on top of each other, i.e an upper bound on the size of s.
      *
      * @return
      */
@@ -569,7 +569,7 @@ public:
         return -1;
     }
 
-    /// Constructor for cloning
+/// Constructor for cloning
     SquarePacking(bool share, SquarePacking &space) : Script(share, space), n(space.n), p(space.p) {
         s.update(*this, share, space.s);
         xCoords.update(*this, share, space.xCoords);
@@ -586,9 +586,7 @@ public:
     virtual void print(std::ostream &os) const {
         os << "SquarePacking Solution: " << std::endl;
         os << "Enclosing square size: " << s << "x" << s << std::endl;
-        os
-                << "Square coordinates (different square 1 solutions are excluded since it can be placed anywhere (almost)):"
-                << std::endl;
+        os << "Square coordinates (different square 1 solutions are excluded since it can be placed anywhere (almost)):" << std::endl;
         for (int i = 0; i < n - 1; ++i) {
             os << "square" << n - i << ": (" << xCoords[i] << "," << yCoords[i] << ") ";
         }
@@ -605,11 +603,8 @@ public:
  */
 int main(int argc, char *argv[]) {
 
-    // commandline options
-    ObligatoryPartSizeOptions opt("SquarePacking");
-
     //Commandline options
-    //SizeOptions opt("SquarePacking");
+    ObligatoryPartSizeOptions opt("SquarePacking");
 
     //Default options
     opt.solutions(0);//0 means find all solutions.
@@ -636,4 +631,3 @@ int main(int argc, char *argv[]) {
      */
     return 0;
 }
-

@@ -39,7 +39,7 @@ using namespace Gecode::Int;
 class IntervalBrancher : public Brancher {
 protected:
     // Views for x-coordinates (or y-coordinates)
-    ViewArray<IntView> x;
+    ViewArray <IntView> x;
     // Width (or height) of rectangles
     int *w;
     // Percentage for obligatory part
@@ -56,7 +56,7 @@ protected:
         // You might need more information, please add here
 
         /* Initialize description for brancher b, number of
-         *  alternatives a, position p, and ???.
+         *  alternatives a, position p, and split-mark.
          */
         Description(const Brancher &b, unsigned int a, int p, int split)
                 : Choice(b, a), pos(p), split(split) {}
@@ -77,11 +77,11 @@ protected:
 public:
     // Construct branching
     IntervalBrancher(Home home,
-                     ViewArray<IntView> &x0, int w0[], double p0)
+                     ViewArray <IntView> &x0, int w0[], double p0)
             : Brancher(home), x(x0), w(w0), p(p0), start(0) {}
 
     // Post branching
-    static void post(Home home, ViewArray<IntView> &x, int w[], double p) {
+    static void post(Home home, ViewArray <IntView> &x, int w[], double p) {
         (void) new(home) IntervalBrancher(home, x, w, p);
     }
 
@@ -102,31 +102,34 @@ public:
     // Check status of brancher, return true if alternatives left
     virtual bool status(const Space &home) const {
         for (int i = start; i < x.size(); ++i) {
-            if(!x[i].assigned()){
+            /**
+             * If x already assigned there is no branching to do.
+             */
+            if (!x[i].assigned()) {
                 /**
-                 * If x-range has space for a obligatory part of size p*size then we can branch.
+                 * If x-range has space for an obligatory part of size p*size then we can branch.
                  */
-                if(x[i].min() + w[i] - p* w[i] < x[i].max()){
+                if ((x[i].min() + w[i] - std::ceil(p * w[i])) < x[i].max()) {
                     start = i; //update variable we are branching on
                     return true;
                 }
             }
-            return false; //no more branching possible
         }
+        return false; //no more branching possible
     }
 
     // Return choice as description
     virtual const Choice *choice(Space &home) {
-        int obligatoryPartSize = p*w[start];
-        int obligatoryPartStart = x[start].min() + w[start]-obligatoryPartSize;
+        int obligatoryPartSize = std::ceil(p * w[start]);
+        int split = x[start].min() + w[start] - obligatoryPartSize;
         int noAlternatives = 2;
         /**
-         * Binary branching such that first x-interval is [x.min(),  obligatoryPartStart)
-         * second x-interval will thus be [obligatoryPartStart,  x.max()]
-         * obligatoryPart is [obligatoryPartStart, obligatoryPartStart + obligatoryPartSize]
+         * Binary branching such that first x-interval is [x.min(), split], which enforces obligatory part
+         * second x-interval will thus be (split,  x.max()]
+         * obligatoryPart is [x.min(), split ()]
          * start = current variable position we are branching on
          */
-        return new Description(*this, noAlternatives, start, obligatoryPartStart);
+        return new Description(*this, noAlternatives, start, split);
     }
 
     // Construct choice from archive e
@@ -141,16 +144,17 @@ public:
     virtual ExecStatus commit(Space &home, const Choice &c, unsigned int a) {
         const Description &d = static_cast<const Description &>(c);
         /**
-         * First alternative interval [x.min - split)
+         * First alternative, interval [x.min, split], enforces obligatory part to be p % of side size.
          */
-        if(a == 0){
-            GECODE_ME_CHECK(x[start].le(*this, d.split));
+        if (a == 0) {
+            GECODE_ME_CHECK(x[d.pos].lq(home, d.split));
         }
         /**
-         * Second alternative interval [split - x.max]
+         * Second alternative, interval (split - x.max], keep the values that is excluded by first branching
+         * to keep the branches disjunctive.
          */
-        if(a == 1) {
-            GECODE_ME_CHECK(x[start].gq(*this, d.split));
+        if (a == 1) {
+            GECODE_ME_CHECK(x[d.pos].gr(home, d.split));
         }
         return ES_OK;
     }
@@ -161,13 +165,13 @@ public:
 
         const Description &d = static_cast<const Description &>(c);
 
-        if(b == 0){
+        if (b == 0) {
             o << "First branch-alternative" << std::endl;
-            o << "x[" << d.pos << "]" << "| interval: [" << x[pos].min() << "," << d.split << ")";
+            o << "x[" << d.pos << "]" << "| interval: [" << x[d.pos].min() << "," << d.split << "]";
         }
-        if(b == 1){
+        if (b == 1) {
             o << "Second branch-alternative" << std::endl;
-            o << "x[" << d.pos << "]" << "| interval: [" << d.split << "," << x[pos].max() << "]";
+            o << "x[" << d.pos << "]" << "| interval: (" << d.split << "," << x[d.pos].max() << "]";
         }
 
     }
@@ -181,7 +185,7 @@ void interval(Home home, const IntVarArgs &x, const IntArgs &w, double p) {
     // Never post a branching in a failed space
     if (home.failed()) return;
     // Create an array of integer views
-    ViewArray<IntView> vx(home, x);
+    ViewArray <IntView> vx(home, x);
     // Create an array of integers
     int *wc = static_cast<Space &>(home).alloc<int>(x.size());
     for (int i = x.size(); i--;)
@@ -189,4 +193,3 @@ void interval(Home home, const IntVarArgs &x, const IntArgs &w, double p) {
     // Post the brancher
     IntervalBrancher::post(home, vx, wc, p);
 }
-
