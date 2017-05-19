@@ -9,6 +9,12 @@
 
 using namespace Gecode;
 
+/**
+ *  Script that finds maximum density still life patterns. For execution instructions see comments at bottom of file.
+ *  Uses the border technique + constraint on neighbor of each cell to ensure that the pattern stays still.
+ *  Uses BAB-search engine + constraint function to maximize density of the pattern.
+ *  Uses implied constraint optimization that the pattern is divided into 3x3 squares with maximized density.
+ */
 class Life : public Script {
 
 public:
@@ -26,23 +32,29 @@ public:
         Matrix<BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
 
         /**
-         * Ensure pattern does not spread. Constraints on the border
+         * Ensure pattern does not spread. Constraints on the border.
+         * A dead cell with less than three live neighbors will not be resurrected.
          */
-        rel(*this, cellsMatrix.row(n + 2), IRT_EQ, 0);
-        rel(*this, cellsMatrix.row(n + 3), IRT_EQ, 0);
-        rel(*this, cellsMatrix.row(0), IRT_EQ, 0);
-        rel(*this, cellsMatrix.row(1), IRT_EQ, 0);
-        rel(*this, cellsMatrix.col(n + 2), IRT_EQ, 0);
-        rel(*this, cellsMatrix.col(n + 3), IRT_EQ, 0);
-        rel(*this, cellsMatrix.col(0), IRT_EQ, 0);
-        rel(*this, cellsMatrix.col(1), IRT_EQ, 0);
+        rel(*this, sum(cellsMatrix.row(n + 2)) == 0);
+        rel(*this, sum(cellsMatrix.row(n + 2)) == 0);
+        rel(*this, sum(cellsMatrix.row(n + 3)) == 0);
+        rel(*this, sum(cellsMatrix.row(0)) == 0);
+        rel(*this, sum(cellsMatrix.row(1)) == 0);
+        rel(*this, sum(cellsMatrix.col(n + 2)) == 0);
+        rel(*this, sum(cellsMatrix.col(n + 3)) == 0);
+        rel(*this, sum(cellsMatrix.col(0)) == 0);
+        rel(*this, sum(cellsMatrix.col(1)) == 0);
 
         /**
-         * Constraints to ensure pattern does not spread.
+         * Constraints on each individual cell to ensure pattern does not spread and also construction of
+         * sum of 3x3 squares.
          */
         int squareNo = 0;
         for (int i = 1; i < n + 3; ++i) {
             for (int j = 1; j < n + 3; ++j) {
+                /**
+                 * Collect neighborhood cells
+                 */
                 BoolVarArgs neighborCells;
                 neighborCells << cellsMatrix(i, j - 1);
                 neighborCells << cellsMatrix(i, j + 1);
@@ -108,6 +120,12 @@ public:
         os << "Number of live cells:" << sum << std::endl;
     }
 
+    /**
+     * Auxillary function returning number of 3x3 squares given an n.
+     *
+     * @param n
+     * @return
+     */
     int noThreeSquares(int n){
         return ceil(n/3.0)*ceil(n/3.0);
     }
@@ -151,13 +169,9 @@ int main(int argc, char *argv[]) {
 
     /**
      * Example cmd to solve:
-     * ./bin/life -mode gist -ipl dom -solutions 1 3
-     * ./bin/life -mode solution -ipl speed -solutions 0 3
-     * ./bin/life -mode time -ipl def -solutions 0 3
-     * ./bin/life -mode stat -ipl memory -solutions 0 3
+     * ./bin/life 8
+     * ./bin/life 9
      *
-     * or with default (4, solution, def, 1):
-     * ./bin/life 3
      */
     return 0;
 }
