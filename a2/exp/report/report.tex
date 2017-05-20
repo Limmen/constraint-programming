@@ -123,11 +123,12 @@ p_+(s) =
 \end{gather*}
 
 \section*{Generalizing to Arbitrary Equations}
-
+Propagator $p_= \in constraint \equiv \displaystyle\sum_{i=1}^{n} a_i x_i = c$. where $a_i$ and $c$ are integers while $x_i$ are variables.
 \begin{gather*}
 p_=(s) = 
 \begin{cases}
-  \forall i \in \{1, \ldots, n\}, x_i \mymapsto \{n \in s(x_i) | s(x_i) = \frac{c}{a_i}\}\\
+  \forall i \in \{1, \ldots, n\}: \\
+  x_i \mymapsto \{n \in s(x)| \forall j \in X = \{1, ..., n\} \setminus \{i\}, \exists m_j \in s(x_j), (\sum_{j \in X}m_j \cdot a_j) + n \cdot a_i = c\}\\
 \end{cases}
 \end{gather*}
 
@@ -135,7 +136,7 @@ p_=(s) =
   $p_=$ is idempotent
 \end{theorem}
 \begin{proof}
-This follows from contracting property of propagator and that $a_i$, $c$ are constants. After running the propagator once either we have a failed store or $x_i = \frac{c}{a_i}$, then there are no more values to remove and propagator is not allowed to add any values.
+The propagator is domain consistent and idempotent. This follows from contracting property of propagator and that $a_i$, $c$ are constants. After running the propagator once either we have a failed store or $\displaystyle\sum_{i=1}^{n} a_i x_i = c$, then there are no more values to remove and propagator is not allowed to add any values.
 \end{proof}
 
 \section*{Propagating on paper}

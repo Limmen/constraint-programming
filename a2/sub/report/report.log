@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.4.16)  12 MAY 2017 10:59
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.4.16)  20 MAY 2017 10:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -589,16 +589,22 @@ lmsy/m/n/10.95 ^^A \OML/lmm/m/it/10.95 x \OT1/lmr/m/n/10.95 + \OML/lmm/m/it/10.
  []
 
 
-Overfull \hbox (0.52539pt too wide) in paragraph at lines 84--85
+Overfull \hbox (0.52539pt too wide) in paragraph at lines 83--84
 []\T1/lmr/m/n/10.95 Assume by con-tra-dic-tion that $\OML/lmm/m/it/10.95 p[]$ \
 T1/lmr/m/n/10.95 is not idem-po-tent, then there ex-ists two stores $\OML/lmm/m
 /it/10.95 p[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 ) =
  []
 
-[1
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 89.
+(/usr/share/texmf/tex/latex/lm/omslmr.fd
+File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 89.
+ [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Overfull \hbox (12.92693pt too wide) in paragraph at lines 150--151
+Overfull \hbox (12.92693pt too wide) in paragraph at lines 155--156
 \OML/lmm/m/it/10.95 p[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10
 .95 )$\T1/lmr/m/n/10.95 . I.e $\OML/lmm/m/it/10.95 p[]\OT1/lmr/m/n/10.95 (\OML/
 lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 )$ \T1/lmr/m/n/10.95 is strictly stronger th
@@ -610,27 +616,27 @@ ML/lmm/m/it/10.95 p\OT1/lmr/m/n/10.95 )[]\OML/lmm/m/it/10.95 p[]\OT1/lmr/m/n/10
 n/10.95 ) \OMS/lmsy/m/n/10.95 ^^Z
  []
 
-(./report.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 176.
- [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 176.
+[3] (./report.bbl)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 181.
+ [4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 181.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 176.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 176.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 181.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 181.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 176.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 181.
  ) 
 Here is how much of TeX's memory you used:
- 10075 strings out of 493304
- 142277 string characters out of 6139871
+ 10093 strings out of 493304
+ 142547 string characters out of 6139871
  339635 words of memory out of 5000000
- 13318 multiletter control sequences out of 15000+600000
+ 13332 multiletter control sequences out of 15000+600000
  60395 words of font info for 47 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 29i,21n,35p,671b,337s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,21n,35p,671b,443s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
-ips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share
+ips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share
 /texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm
 -mathit.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texm
 f/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmex
@@ -640,10 +646,10 @@ ts/type1/public/lm/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb>
 public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/s
 hare/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (3 pages, 159761 bytes).
+Output written on report.pdf (4 pages, 163145 bytes).
 PDF statistics:
- 91 PDF objects out of 1000 (max. 8388607)
- 74 compressed objects within 1 object stream
- 16 named destinations out of 1000 (max. 500000)
+ 95 PDF objects out of 1000 (max. 8388607)
+ 77 compressed objects within 1 object stream
+ 17 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

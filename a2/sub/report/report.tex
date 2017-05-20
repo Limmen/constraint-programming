@@ -67,14 +67,13 @@ Propagator $p_{lin} \in constraint \equiv a \cdot x + b \cdot y \leq c \quad \te
 \begin{gather*}
 p_{lin}(s) = 
 \begin{cases}
-  a > 0 \implies x \mymapsto \{n \in s(x) | n \leq \frac{c - (b \cdot \min s(y))}{a} \}\\
-  a < 0 \implies x \mymapsto \{n \in s(x) | n \geq \frac{c - (b \cdot \min s(y))}{a} \}\\
-  b > 0 \implies y \mymapsto \{n \in s(y) | n \leq \frac{c - (a \cdot \min s(x))}{b} \}\\
-  b < 0 \implies y \mymapsto \{n \in s(y) | n \geq \frac{c - (a \cdot \min s(x))}{b} \}\\
+  a > 0 \implies x \mymapsto \{n \in s(x) | n \leq \left\lceil{\frac{\max\{c - (b \cdot m) | m \in s(y)\}}{a}}\right\rceil \}\\\\
+  a < 0 \implies x \mymapsto \{n \in s(x) | n \geq \left\lfloor{\frac{\max\{c - (b \cdot m) | m \in s(y)\}}{a}}\right\rfloor \}\\\\
+  b > 0 \implies y \mymapsto \{n \in s(y) | n \leq \left\lceil{\frac{\max\{c - a \cdot m | m \in s(x)\}}{b}}\right\rceil \}\\\\
+  b < 0 \implies y \mymapsto \{n \in s(y) | n \geq \left\lfloor{\frac{\max\{c - a \cdot m | m \in s(x)\}}{b}}\right\rfloor \}\\\\
 \end{cases}
 \end{gather*}
 \subsection*{Idempotence}
-
 \begin{theorem}
 The propagator $p_{lin}$ is idempotent
 \end{theorem}
@@ -83,15 +82,21 @@ Proof sketch:
 \begin{proof}
 Assume by contradiction that $p_{lin}$ is not idempotent, then there exists two stores $p_{lin}(s) = s'$ and $p_{lin}(s') = s''$ such that  $s' \neq s''$. If $s'$ is failed then $s''$ must also be failed by the definition of the propagator. From now on we therefore consider the case where $s'$ is not failed.
 
-  $p_{lin}$ is by definition contracting which means that if $s' \neq s''$ the following must hold: $s'' < s'$, which implies that $s''(x) \subset s'(x) \lor s''(y) \subset s'(y)$.
+$p_{lin}$ is by definition contracting which means that if $s' \neq s''$ the following must hold: $s'' < s'$, which implies that $s''(x) \subset s'(x) \lor s''(y) \subset s'(y)$.
 
-By definition of $p_{lin}$, $\forall n \in s'(x), n \leq  \frac{c - (b \cdot \min s(y))}{a}$ and $\forall n \in s'(y), n \leq  \frac{c - (a \cdot \min s(x))}{b}$. From this it follows that for it to be possible that $s'' < s'$ it must be that $\min s'(x)$ is less than $\min s(x)$ or $\min s'(y)$ is less than $\min s(y)$. This is a contradiction of the contracting-property of $p_{lin}$ since the minimum value of x or y can only be increased from store $s$ to $s'$, never decreased. To decrease the minimum value of $x$ or $y$ it is necessary to \underline{add} a value to the store, which contradicts the contracting property. 
+There are four cases to consider here:
+\begin{itemize}
+\item $a>0 \land b>0 \implies$ for it to be possible that $s'' < s'$ it must be that $\min s'(x)$ is less than $\min s(x)$ or $\min s'(y)$ is less than $\min s(y)$. This is a contradiction of the contracting-property of $p_{lin}$ since the minimum value of x or y can only be increased from store $s$ to $s'$, never decreased. To decrease the minimum value of $x$ or $y$ it is necessary to \underline{add} a value to the store, which contradicts the contracting property.
+\item $a < 0 \land b < 0 \implies$ for it to be possible that $s'' < s'$ it must be that $\max s'(x) \neq \max s(x)$ since the constraint is for greater-than-or-equal ($\geq$), if max value is pruned than the store is failed, i.e $a<0 \land b < 0 \land \max s'(x) \neq \max s(x) \implies \max s'(x) = \emptyset$. The same holds for $y$.
+\item $a < 0 \land b > 0 \implies$ for it to be possible that $s'' < s'$ it must be that $\max s'(x) \neq \max s(x)$ or that $\min s'(y) < \min s(y)$ in both cases idempotence still holds by the same reasoning as above.
+\item $a > 0 \land b < 0 \implies$ same argument as point above.
+\end{itemize}
 \end{proof}
 \subsection*{Subsumption}
 Detect subsumption early:
 
 $$p_{lin}(s):  \text{\textbf{let }} s' = p_{lin}(s)$$
-$$\text{ \textbf{if }} a \cdot \max s(x) + b \cdot \max s(y) \leq c$$
+$$\text{ \textbf{if }} \max(a \cdot s(x)) + \max(b \cdot s(y)) \leq c$$
 $$\text{\textbf{then }} \langle subsumed, s' \rangle \text{ \textbf{else} } \langle fix, s' \rangle$$
 
 
