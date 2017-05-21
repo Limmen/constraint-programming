@@ -26,6 +26,11 @@
  *
  */
 
+//
+// interval.cpp
+// Created by Kim Hammar & Mallu on 2017-05-19.
+//
+
 #include <gecode/int.hh>
 
 using namespace Gecode;
@@ -51,13 +56,14 @@ protected:
   public:
     // Position of view
     int pos;
+    int subinterval;
     // You might need more information, please add here
 
     /* Initialize description for brancher b, number of
      *  alternatives a, position p, and ???.
      */
-    Description(const Brancher& b, unsigned int a, int p)
-      : Choice(b,a), pos(p) {}
+    Description(const Brancher& b, unsigned int a, int p, int sub)
+      : Choice(b,a), pos(p) ,subinterval(sub) {}
     // Report size occupied
     virtual size_t size(void) const {
       return sizeof(Description);
@@ -66,7 +72,7 @@ protected:
     virtual void archive(Archive& e) const {
       Choice::archive(e);
       // You must also archive the additional information
-      e << pos << ...;
+      e << pos << subinterval;
     }
   };
 public:
@@ -93,36 +99,65 @@ public:
   }
 
   // Check status of brancher, return true if alternatives left
-  virtual bool status(const Space& home) const {
-
+  virtual bool status(const Space& home) const { //parses over to check if anything is left to be done
+  	for(int i = start; i< x.size(); i++){
+  		if (!x[i].assigned())
+  		{
+  			if(x[i].min() + w[i] - p * w[i] < x[i].max())
+  			{
+  				start = i;
+  				return true;
+  			}
+  		}
+  	}
+  		return false;
     // FILL IN HERE
 
   }
   // Return choice as description
   virtual const Choice* choice(Space& home) {
+  	int subinterval = x[start].min() + w[start] - p * w[start];
 
+  	return new Description(*this, 2, start, subinterval);
     // FILL IN HERE
 
   }
   // Construct choice from archive e
   virtual const Choice* choice(const Space&, Archive& e) {
     // Again, you have to take care of the additional information
-    int pos, ...;
-    e >> pos >> ...;
-    return new Description(*this, pos, ...);
+    int pos;
+    int subinterval;
+    e >> pos >> subinterval;
+    return new Description(*this, pos, p, subinterval);
   }
   // Perform commit for choice c and alternative a
   virtual ExecStatus commit(Space& home, 
                             const Choice& c,
                             unsigned int a) {
     const Description& d = static_cast<const Description&>(c);
-
+    int pos = d.pos;
+    int subinterval = d.subinterval;
+    if (a == 0) {
+            return me_failed(x[pos].le(home, subinterval)) ? ES_FAILED : ES_OK;
+        }
+  		else {
+            return me_failed(x[pos].gr(home, subinterval)) ? ES_FAILED : ES_OK;
+        }
     // FILL IN HERE
 
   }
   // Print some information on stream o (used by Gist, from Gecode 4.0.1 on)
   virtual void print(const Space& home, const Choice& c, unsigned int b,
                      std::ostream& o) const {
+  		const Description& description = static_cast<const Description&>(c);
+    	int pos = description.pos;
+    	int subinterval = description.subinterval;
+    	if (b == 0) {
+            o << "x[" << pos << "] = " << x[pos].min() << "-" << subinterval;
+        }
+        else {
+            o << "x[" << pos << "] =" << (subinterval + 1) << "-" << x[pos].max();
+        }
 
     // FILL IN HERE
 
