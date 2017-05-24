@@ -28,7 +28,7 @@
 
 //
 // interval.cpp
-// Created by Kim Hammar & Mallu on 2017-05-19.
+// Created by Kim Hammar & Mallu on 2017-05-25.
 //
 
 #include <gecode/int.hh>
@@ -56,7 +56,7 @@ protected:
   public:
     // Position of view
     int pos;
-    int subinterval;
+    int subinterval; //split x and y
     // You might need more information, please add here
 
     /* Initialize description for brancher b, number of
@@ -111,16 +111,12 @@ public:
   		}
   	}
   		return false;
-    // FILL IN HERE
-
   }
   // Return choice as description
   virtual const Choice* choice(Space& home) {
   	int subinterval = x[start].min() + w[start] - p * w[start];
 
   	return new Description(*this, 2, start, subinterval);
-    // FILL IN HERE
-
   }
   // Construct choice from archive e
   virtual const Choice* choice(const Space&, Archive& e) {
@@ -138,13 +134,11 @@ public:
     int pos = d.pos;
     int subinterval = d.subinterval;
     if (a == 0) {
-            return me_failed(x[pos].le(home, subinterval)) ? ES_FAILED : ES_OK;
+            return me_failed(x[pos].le(home, subinterval)) ? ES_FAILED : ES_OK; //less
         }
   		else {
-            return me_failed(x[pos].gr(home, subinterval)) ? ES_FAILED : ES_OK;
+            return me_failed(x[pos].gr(home, subinterval)) ? ES_FAILED : ES_OK;// greater
         }
-    // FILL IN HERE
-
   }
   // Print some information on stream o (used by Gist, from Gecode 4.0.1 on)
   virtual void print(const Space& home, const Choice& c, unsigned int b,
@@ -158,9 +152,6 @@ public:
         else {
             o << "x[" << pos << "] =" << (subinterval + 1) << "-" << x[pos].max();
         }
-
-    // FILL IN HERE
-
   }
 };
 
