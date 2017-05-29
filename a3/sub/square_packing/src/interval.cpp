@@ -34,7 +34,8 @@ using namespace Gecode::Int;
 
 /*
  * Custom brancher for forcing mandatory parts
- *
+ * A good percentage value for p is 0.35, this have been verified with experiements but was first found in this paper:
+ * https://www.ijcai.org/Proceedings/09/Papers/092.pdf
  */
 class IntervalBrancher : public Brancher {
 protected:
@@ -53,7 +54,6 @@ protected:
         // Position of view
         int pos;
         int split;
-        // You might need more information, please add here
 
         /* Initialize description for brancher b, number of
          *  alternatives a, position p, and split-mark.
@@ -126,7 +126,7 @@ public:
         /**
          * Binary branching such that first x-interval is [x.min(), split], which enforces obligatory part
          * second x-interval will thus be (split,  x.max()]
-         * obligatoryPart is [x.min(), split ()]
+         * obligatoryPart is [x.min(), split]
          * start = current variable position we are branching on
          */
         return new Description(*this, noAlternatives, start, split);
