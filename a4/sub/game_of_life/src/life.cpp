@@ -3,6 +3,33 @@
 // Created by Kim Hammar & Mallu Goswami on 2017-05-01.
 //
 
+/**
+ n=8
+ GOL Max Still-Life Pattern:
+ 1 1 0 1 1 0 1 1
+ 1 1 0 1 1 0 1 1
+ 0 0 0 0 0 0 0 0
+ 1 1 0 1 1 0 1 1
+ 1 1 0 1 1 0 1 1
+ 0 0 0 0 0 0 0 0
+ 1 1 0 1 1 0 1 1
+ 1 1 0 1 1 0 1 1
+Number of live cells:36
+
+ n=9
+ GOL Max Still-Life Pattern:
+ 1 1 0 0 1 1 0 1 1
+ 1 0 0 1 0 1 0 1 1
+ 0 1 0 1 0 1 0 0 0
+ 1 1 0 1 0 1 1 1 1
+ 1 0 0 1 0 0 0 0 1
+ 0 1 0 1 1 1 1 0 0
+ 1 1 0 0 0 0 1 1 0
+ 1 0 0 1 1 0 0 0 1
+ 0 1 1 0 1 1 0 1 1
+Number of live cells:43
+ */
+
 #include <gecode/driver.hh>
 #include <gecode/int.hh>
 #include <gecode/minimodel.hh>
@@ -29,7 +56,7 @@ public:
             cells(*this, (n + 4) * (n + 4), 0, 1),
             threeSquares(*this, noThreeSquares(n), 0, 6) {
 
-        Matrix<BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
+        Matrix <BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
 
         /**
          * Ensure pattern does not spread. Constraints on the border.
@@ -77,7 +104,7 @@ public:
                  * Constrain 3x3 squares for optimization.
                  * Border of size 2 implies first 3x3 square bottom-left corner is at (2, 2), second one is at (5, 2), ... etc.
                  */
-                if (j % 3 == 2 && i % 3 == 2 && j < n+2 && i < n+2) {
+                if (j % 3 == 2 && i % 3 == 2 && j < n + 2 && i < n + 2) {
                     rel(*this, threeSquares[squareNo] ==
                                cellsMatrix(i, j) + cellsMatrix(i, j + 1) + cellsMatrix(i, j + 2) +
                                cellsMatrix(i + 1, j) + cellsMatrix(i + 1, j + 1) + cellsMatrix(i + 1, j + 2) +
@@ -108,7 +135,7 @@ public:
     virtual void print(std::ostream &os) const {
         int sum = 0;
         os << "-----------------------------------------------" << std::endl;
-        Matrix<BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
+        Matrix <BoolVarArray> cellsMatrix(cells, n + 4, n + 4);
         os << "GOL Max Still-Life Pattern:" << std::endl;
         for (int i = 2; i < n + 2; ++i) {
             for (int j = 2; j < n + 2; ++j) {
@@ -126,8 +153,8 @@ public:
      * @param n
      * @return
      */
-    int noThreeSquares(int n){
-        return ceil(n/3.0)*ceil(n/3.0);
+    int noThreeSquares(int n) {
+        return ceil(n / 3.0) * ceil(n / 3.0);
     }
 
     /**

@@ -34,8 +34,7 @@ using namespace Gecode::Int;
 
 /*
  * Custom brancher for forcing mandatory parts
- * A good percentage value for p is 0.35, this have been verified with experiements but was first found in this paper:
- * https://www.ijcai.org/Proceedings/09/Papers/092.pdf
+ * A good percentage value for p is 0.35
  */
 class IntervalBrancher : public Brancher {
 protected:
