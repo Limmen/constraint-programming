@@ -1,3 +1,0 @@
-/home/kim/workspace/gecode/constraint_programming_gecode/a1/exp/send_more_money_gist_1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/kim/workspace/gecode/constraint_programming_gecode/a1/exp/send_more_money_gist_1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/kim/workspace/gecode/constraint_programming_gecode/a1/exp/send_more_money_gist_1/cmake-build-debug/CMakeFiles/send_more_money_gist_1.dir

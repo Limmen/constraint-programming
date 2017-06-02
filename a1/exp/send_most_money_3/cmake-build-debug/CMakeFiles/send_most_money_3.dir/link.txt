@@ -1,1 +1,0 @@
-/usr/bin/c++   -g   CMakeFiles/send_most_money_3.dir/src/main.cpp.o  -o send_most_money_3 
